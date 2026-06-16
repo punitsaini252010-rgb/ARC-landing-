@@ -1,200 +1,171 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARC — ESCAPE THE SYSTEM</title>
+    <title>ARC | THE SOVEREIGN VAULT</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sovereign: ['Cinzel', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    colors: {
-                        matrixBlack: '#0A0807',
-                        royalUmber: '#1E1611',
-                        liquidGold: '#D4AF37',
-                        liquidSilver: '#E5E4E2',
-                        imperialPurple: '#2E1A47',
-                        crimsonRed: '#8B0000',
-                        skyCyan: '#00E5FF',
-                    }
+                    fontFamily: { sovereign: ['Cinzel', 'serif'], sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { royalUmber: '#1E1611', liquidGold: '#D4AF37' }
                 }
             }
         }
     </script>
     <style>
-        body {
-            background-color: #0A0807;
-            color: #E5E4E2;
-            overflow-x: hidden;
-        }
-        .gold-grad-text {
-            background: linear-gradient(135deg, #FFF 30%, #D4AF37 70%, #AA771C 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .purple-glow {
-            box-shadow: 0 0 50px -10px rgba(46, 26, 71, 0.6);
-        }
-        .gold-border-glow:hover {
-            box-shadow: 0 0 25px -5px rgba(214, 175, 55, 0.4);
-            border-color: #D4AF37;
-        }
+        body { margin: 0; overflow: hidden; background-color: #0A0807; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; }
+        #ui-layer { position: relative; z-index: 10; pointer-events: none; }
+        .interactive-btn { pointer-events: auto; }
+        .gold-grad-text { background: linear-gradient(135deg, #FFF 30%, #D4AF37 70%, #AA771C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-panel { background: rgba(10, 8, 7, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.2); }
     </style>
 </head>
-<body class="font-sans antialiased">
+<body class="font-sans antialiased text-white">
 
-    <section class="relative min-h-screen flex flex-col justify-center items-center px-4 pt-20 pb-12 border-b border-amber-950/30 purple-glow">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(46,26,71,0.15)_0%,transparent_70%)] pointer-events-none"></div>
-        
-        <div class="max-w-5xl mx-auto text-center z-10 space-y-6">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-royalUmber/80 border border-liquidGold/30 backdrop-blur-sm animate-pulse">
-                <span class="w-1.5 h-1.5 rounded-full bg-skyCyan"></span>
-                <span class="font-sovereign text-[10px] tracking-[0.4em] text-liquidGold font-bold uppercase">Sovereign Access Only</span>
-            </div>
+    <div id="canvas-container"></div>
 
-            <h1 class="font-sovereign text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.1] text-white">
-                They Built A Matrix To <br class="hidden md:inline"/>
-                <span class="gold-grad-text">Keep You Broke.</span>
+    <main id="ui-layer" class="w-full h-screen flex flex-col justify-center items-center px-4">
+        <div class="glass-panel p-10 md:p-16 rounded-2xl max-w-4xl w-full text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-liquidGold/40 m-4"></div>
+            <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-liquidGold/40 m-4"></div>
+
+            <h1 class="font-sovereign text-5xl md:text-7xl font-black tracking-tighter mb-6">
+                ENTER THE <br /> <span class="gold-grad-text">ARC MATRIX</span>
             </h1>
             
-            <p class="font-sovereign text-xs sm:text-sm tracking-[0.25em] text-gray-400 max-w-2xl mx-auto uppercase leading-relaxed">
-                Your salary is calculated debt. Your path is engineered compliance. This is the cryptographic override code.
+            <p class="text-sm md:text-base text-gray-300 tracking-[0.2em] uppercase font-light max-w-2xl mx-auto mb-10 leading-relaxed">
+                The physics of wealth have been hidden. The 3D geometry of the new economy is reserved for operators.
             </p>
 
-            <div class="max-w-4xl mx-auto mt-12 p-2 rounded-2xl bg-gradient-to-b from-amber-950/20 to-transparent border border-amber-950/40 shadow-2xl relative">
-                <div class="absolute -top-4 -left-4 w-24 h-24 bg-imperialPurple/30 rounded-full blur-2xl"></div>
-                <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-crimsonRed/10 rounded-full blur-2xl"></div>
-                
-                <div class="bg-matrixBlack rounded-xl p-6 border border-amber-950/20 text-left space-y-4">
-                    <div class="flex items-center justify-between border-b border-amber-950/30 pb-3">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-crimsonRed/60"></span>
-                            <span class="w-2.5 h-2.5 rounded-full bg-liquidGold/60"></span>
-                            <span class="w-2.5 h-2.5 rounded-full bg-skyCyan/60"></span>
-                        </div>
-                        <span class="font-sovereign text-[9px] tracking-widest text-gray-500">SYSTEM://ARC_VAULT_DEEP_INFRASTRUCTURE</span>
-                    </div>
-                    <div class="font-mono text-xs text-gray-400 space-y-2 leading-relaxed">
-                        <p class="text-skyCyan"><span class="text-gray-600">&gt;</span> INITIALIZING ASYMMETRICAL CASH FLOW ENGINES...</p>
-                        <p><span class="text-liquidGold">[PHASE 1]</span> THE MIND & INSTANT MOBILIZATION — UNLOCKED</p>
-                        <p><span class="text-liquidGold">[PHASE 2]</span> CRYPTO FUTURES / ALGORITHMIC RISK MATH — UNLOCKED</p>
-                        <p><span class="text-gray-600">[PHASE 3]</span> OFFSHORE IMPERIAL HOLDINGS — STANDING BY</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pt-8">
-                <a href="https://your-gumroad-store-link.com" 
-                   class="inline-block relative group px-12 py-5 bg-gradient-to-r from-royalUmber to-matrixBlack border-2 border-[#AA771C]/60 text-white rounded-lg font-sovereign text-xs font-black tracking-[0.3em] uppercase transition-all duration-300 transform hover:-translate-y-0.5 gold-border-glow">
-                    <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-liquidGold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    <span class="relative z-10 text-white group-hover:text-liquidGold transition-colors duration-300">⚔️ Enter The Vault</span>
-                </a>
-                <p class="text-[10px] tracking-widest text-gray-500 uppercase mt-4">One-time entry allocation fee applies. Instant secure access.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="max-w-5xl mx-auto px-4 py-24 grid md:grid-cols-2 gap-12 items-center">
-        <div class="space-y-6">
-            <h2 class="font-sovereign text-2xl sm:text-3xl font-bold tracking-wide text-white leading-tight">
-                The System Wants You <br class="hidden sm:inline"/>
-                <span class="text-crimsonRed">Fatigued, Fragile, And Broke.</span>
-            </h2>
-            <div class="w-16 h-[2px] bg-gradient-to-r from-crimsonRed to-transparent"></div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-                Modern society does not design classrooms or corporate ranks to make you sovereign. They are built to extract your focus, trade your limited hours for decaying fiat currency, and leave you financially stranded by design.
-            </p>
-            <p class="text-gray-400 text-sm leading-relaxed font-semibold text-liquidSilver">
-                You do not need another digital course. You require an operational framework built by engineers.
-            </p>
-        </div>
-
-        <div class="bg-royalUmber/30 rounded-xl p-8 border border-amber-950/20 space-y-6">
-            <h3 class="font-sovereign text-xs tracking-widest text-liquidGold font-black uppercase">The Cold Mathematical Math</h3>
-            <ul class="space-y-4 text-xs tracking-wide text-gray-300">
-                <li class="flex items-start gap-3">
-                    <span class="text-crimsonRed font-bold mt-0.5">✕</span>
-                    <span>Traditional education models anchor you into $50,000+ debt structures before you ever make your first dollar.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-crimsonRed font-bold mt-0.5">✕</span>
-                    <span>Standard corporate compensation layers scale linearly, trapping your earnings under an artificial ceiling.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-skyCyan font-bold mt-0.5">✓</span>
-                    <span class="text-white font-semibold">The ARC Weaponry: High-scale digital systems designed to extract asymmetrical financial leverage from day zero.</span>
-                </li>
-            </ul>
-        </div>
-    </section>
-
-    <section class="bg-royalUmber/10 border-t border-b border-amber-950/20 py-24 px-4">
-        <div class="max-w-5xl mx-auto space-y-16">
-            <div class="text-center space-y-4">
-                <h2 class="font-sovereign text-3xl md:text-4xl font-black tracking-wide text-white">
-                    The Complete <span class="gold-grad-text">Tactical Architecture</span>
-                </h2>
-                <p class="text-xs tracking-widest text-gray-500 uppercase">Inside the closed directory of the ARC Operating Engine</p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <div class="bg-matrixBlack p-6 rounded-xl border border-amber-950/30 space-y-4">
-                    <div class="text-[10px] font-mono tracking-widest text-skyCyan uppercase">PHASE 01 // TIME MINIMAL</div>
-                    <h3 class="font-sovereign text-sm font-bold text-white tracking-wider">Instant Mobilization</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Re-engineering primary execution speed. Deploying digital distribution pathways built to process automated capital deployment rapidly.
-                    </p>
-                </div>
-
-                <div class="bg-matrixBlack p-6 rounded-xl border border-amber-950/30 space-y-4">
-                    <div class="text-[10px] font-mono tracking-widest text-liquidGold uppercase">PHASE 02 // HIGH SCALE</div>
-                    <h3 class="font-sovereign text-sm font-bold text-white tracking-wider">Asymmetrical Systems</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Mastering geometric risk math, short-execution strategies, and algorithmic setups across complex modern digital asset markets.
-                    </p>
-                </div>
-
-                <div class="bg-matrixBlack p-6 rounded-xl border border-amber-950/30 space-y-4 sm:col-span-2 md:col-span-1">
-                    <div class="text-[10px] font-mono tracking-widest text-purple-400 uppercase">PHASE 03 // INFINITE SCALE</div>
-                    <h3 class="font-sovereign text-sm font-bold text-white tracking-wider">The Empire Shield</h3>
-                    <p class="text-gray-400 text-xs leading-relaxed">
-                        Insulating liquid capital behind sovereign structures, holding-company mechanics, and elite diversification models.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="max-w-4xl mx-auto px-4 py-28 text-center space-y-8">
-        <h2 class="font-sovereign text-2xl sm:text-4xl font-bold tracking-tight text-white">
-            The Door Is Sealed. <br/>
-            <span class="gold-grad-text">Will You Authorize Access?</span>
-        </h2>
-        <p class="text-gray-400 text-xs max-w-xl mx-auto leading-relaxed uppercase tracking-widest">
-            You can return to your standard timeline, or you can cross the wall into the private architecture. The allocation cost is negligible. The data is immutable.
-        </p>
-
-        <div class="pt-4">
-            <a href="arcbloodline.gumroad.com/l/yffib" 
-               class="inline-block relative group px-14 py-6 bg-gradient-to-r from-royalUmber to-matrixBlack border-2 border-liquidGold text-white rounded-lg font-sovereign text-xs font-black tracking-[0.3em] uppercase transition-all duration-300 transform hover:-translate-y-0.5 gold-border-glow">
-                Secure Access Now ⚔️
+            <a href="https://your-gumroad-link.com" class="interactive-btn inline-block px-12 py-5 bg-royalUmber border border-liquidGold text-liquidGold font-sovereign text-xs font-black tracking-[0.3em] uppercase transition-all duration-500 hover:bg-liquidGold hover:text-black hover:shadow-[0_0_30px_rgba(212,175,55,0.4)]">
+                Unlock The Architecture
             </a>
         </div>
+    </main>
 
-        <div class="pt-16 border-t border-amber-950/20 text-[9px] tracking-[0.3em] text-gray-600 uppercase font-mono">
-            © ARC OPERATING ENVIRONMENT. SYSTEM ARCHITECTURE SECURED BY VERCEL & WHOP.
-        </div>
-    </section>
+    <script>
+        // 1. Scene Setup
+        const scene = new THREE.Scene();
+        // Add a very subtle dark imperial purple fog to blend the 3D object into the background
+        scene.fog = new THREE.FogExp2(0x0A0807, 0.02);
 
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // 2. The Golden Vault Geometry (Complex Torus Knot)
+        const geometry = new THREE.TorusKnotGeometry(12, 3.5, 300, 40, 2, 3);
+        
+        // 3. Hyper-Realistic Metallic Material
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xD4AF37,        // Liquid Gold
+            metalness: 0.9,         // Highly metallic
+            roughness: 0.15,        // Very smooth/reflective
+            wireframe: false
+        });
+
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        // 4. Floating Particles (Gold Dust)
+        const particleGeometry = new THREE.BufferGeometry();
+        const particleCount = 1500;
+        const posArray = new Float32Array(particleCount * 3);
+        for(let i = 0; i < particleCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 100; // Spread across the scene
+        }
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.15,
+            color: 0xD4AF37,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        const particleMesh = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particleMesh);
+
+        // 5. Studio Lighting (Crucial for realism)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const pointLight1 = new THREE.PointLight(0xffffff, 2);
+        pointLight1.position.set(20, 20, 20);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0x00E5FF, 1.5); // Cyan underglow
+        pointLight2.position.set(-20, -20, -20);
+        scene.add(pointLight2);
+
+        const pointLight3 = new THREE.PointLight(0x8B0000, 2); // Crimson side glow
+        pointLight3.position.set(20, -20, 10);
+        scene.add(pointLight3);
+
+        camera.position.z = 40;
+
+        // 6. Interactive Mouse Tracking
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX) * 0.001;
+            mouseY = (event.clientY - windowHalfY) * 0.001;
+        });
+
+        // 7. Animation Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Smooth mouse follow rotation
+            targetX = mouseX * 0.5;
+            targetY = mouseY * 0.5;
+            
+            torusKnot.rotation.y += 0.05 * (targetX - torusKnot.rotation.y);
+            torusKnot.rotation.x += 0.05 * (targetY - torusKnot.rotation.x);
+            
+            // Constant base rotation
+            torusKnot.rotation.z += 0.002;
+            torusKnot.rotation.y += 0.001;
+
+            // Animate particles
+            particleMesh.rotation.y = -elapsedTime * 0.05;
+            particleMesh.rotation.x = elapsedTime * 0.02;
+
+            // Slowly pulse the geometry
+            torusKnot.scale.set(
+                1 + Math.sin(elapsedTime * 0.5) * 0.02,
+                1 + Math.sin(elapsedTime * 0.5) * 0.02,
+                1 + Math.sin(elapsedTime * 0.5) * 0.02
+            );
+
+            renderer.render(scene, camera);
+        }
+
+        // 8. Responsive Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
 </body>
 </html>
-
