@@ -3,23 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARC - Awaken. Rise. Conquer.</title>
+    <title>ARC | Awaken. Rise. Conquer.</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap');
-
-        /* Color Palette (Old Money / Luxury):
-           Background: Deep Brown (#2A1B14)
-           Gold: #D4AF37 (primary), #C5A059, #AA771C
-           Text: White/Off-White (#F5F5F0)
-        */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Montserrat:wght@300;400;600&display=swap');
 
         :root {
-            --bg-brown: #1a100c; /* Very dark, rich brown */
-            --gold-light: #F3E5AB;
-            --gold-main: #D4AF37;
-            --gold-dark: #AA771C;
-            --text-main: #F5F5F0;
-            --text-muted: #B0A8A0;
+            /* The exact rich luxury old-money brown */
+            --bg-brown: #1c110c; 
+            --gold-primary: #dfb75c;
+            --gold-bright: #fcd980;
+            --text-white: #ffffff;
+            --text-gray: #a69c96;
         }
 
         body, html {
@@ -28,26 +22,25 @@
             width: 100%;
             height: 100%;
             background-color: var(--bg-brown);
-            font-family: 'Playfair Display', serif;
-            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-white);
             overflow-x: hidden;
-            /* Subtle radial gradient for depth */
-            background: radial-gradient(circle at center, #2A1B14 0%, #120A07 100%);
+            background: radial-gradient(circle at center, #2d1c14 0%, #110a07 100%);
         }
 
-        /* 3D Canvas Container */
-        #canvas-container {
+        /* 3D WebGL Canvas Layer */
+        #webgl-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
-            pointer-events: none; /* Let clicks pass through to UI */
+            z-index: 1;
+            pointer-events: none;
         }
 
-        /* UI Overlay - Using CSS 3D Transforms */
-        #ui-layer {
+        /* Content Interface */
+        #ui-wrapper {
             position: relative;
             z-index: 10;
             width: 100%;
@@ -55,301 +48,342 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            perspective: 1000px; /* Enable 3D space for children */
-            padding: 2rem;
             box-sizing: border-box;
+            perspective: 1200px;
+            padding-bottom: 100px;
         }
 
-        .interactive-text {
-            text-align: center;
-            transition: transform 0.1s ease-out, color 0.5s ease-in-out;
+        /* Header Section designed to accommodate top pyramid */
+        header {
+            width: 100%;
+            height: 45vh; /* Leaves breathing room for the main 3D liquid gold pyramid */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
             transform-style: preserve-3d;
         }
 
-        .title-arc {
+        .brand-title {
             font-family: 'Cinzel', serif;
-            font-size: 8rem;
+            font-size: 7.5rem;
             font-weight: 900;
             margin: 0;
             line-height: 1;
-            color: var(--gold-main);
-            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            letter-spacing: 0.1em;
+            color: var(--gold-primary);
+            letter-spacing: 0.15em;
+            text-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+            transition: transform 0.1s ease-out;
         }
 
-        .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 0.5em;
-            margin-top: 10px;
-            color: var(--gold-light);
-            text-transform: uppercase;
-        }
-
-        .copy-container {
-            max-width: 700px;
-            margin-top: 50px;
-            text-align: center;
-            background: rgba(26, 16, 12, 0.6);
-            padding: 40px;
-            border-radius: 5px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: transform 0.2s ease-out;
-        }
-
-        .dynamic-heading {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: var(--gold-main);
-            transition: color 0.3s ease;
-        }
-
-        .copy-text {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-
-        .highlight {
-            color: var(--text-main);
-            font-weight: 700;
-        }
-
-        /* 3D Luxury Button */
-        .cta-button-container {
-            margin-top: 40px;
-            perspective: 800px;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 18px 45px;
+        .brand-motto {
             font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #120A07; /* Dark text on gold */
-            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #AA771C 100%);
-            border: none;
+            letter-spacing: 0.6em;
+            margin-top: 15px;
+            color: var(--gold-bright);
+            text-transform: uppercase;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Copy & Positioning Card */
+        .manifesto-container {
+            max-width: 780px;
+            margin-top: 8vh;
+            text-align: center;
+            background: rgba(20, 12, 8, 0.65);
+            padding: 50px 60px;
+            border: 1px solid rgba(223, 183, 92, 0.15);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .headline-strategic {
+            font-family: 'Cinzel', serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--gold-primary);
+            letter-spacing: 1px;
+            transition: color 0.4s ease;
+        }
+
+        .manifesto-text {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--text-gray);
+            margin-bottom: 25px;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .manifesto-text strong {
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        /* Elite Action Button */
+        .cta-wrap {
+            margin-top: 50px;
+            perspective: 1000px;
+        }
+
+        .luxury-button {
+            display: inline-block;
+            padding: 22px 60px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f0906; 
+            background: linear-gradient(135deg, #fcd980 0%, #dfb75c 40%, #aa7e2c 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.5);
-            transition: transform 0.1s ease-out, box-shadow 0.2s ease-out;
+            letter-spacing: 4px;
+            box-shadow: 0 20px 45px rgba(170, 126, 44, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.4);
             transform-style: preserve-3d;
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
         }
 
-        .cta-button:hover {
-            box-shadow: 0 20px 45px rgba(212, 175, 55, 0.5), inset 0 2px 0 rgba(255,255,255,0.7);
-        }
-
-        .cta-button:active {
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-            transform: translateY(5px) scale(0.98);
+        .luxury-button:hover {
+            box-shadow: 0 25px 50px rgba(223, 183, 92, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
         }
     </style>
 </head>
 <body>
 
-    <div id="canvas-container"></div>
+    <div id="webgl-canvas"></div>
 
-    <div id="ui-layer">
-        
-        <div class="interactive-text" id="main-titles">
-            <h1 class="title-arc">ARC</h1>
-            <div class="subtitle">Awaken • Rise • Conquer</div>
-        </div>
+    <div id="ui-wrapper">
+        <header>
+            <h1 class="brand-title" id="ui-title">ARC</h1>
+            <div class="brand-motto" id="ui-motto">Awaken • Rise • Conquer</div>
+        </header>
 
-        <div class="copy-container interactive-text" id="main-copy">
-            <h2 class="dynamic-heading" id="dyn-head">The Illusion of Choice.</h2>
-            <p class="copy-text">
-                They promised you freedom. They handed you a script. Study hard, work quietly, retire old. It is not a life plan; it is a <span class="highlight">containment strategy.</span>
+        <main class="manifesto-container" id="ui-manifesto">
+            <h2 class="headline-strategic" id="ui-headline">The Blueprint of Absolute Leverage.</h2>
+            <p class="manifesto-text">
+                The world operates on an unspoken syntax. Society assigns you a deterministic path: trade your finite hours for depreciating currency, absorb synthetic narratives, and seek permission to exist comfortably. This layout isn't accidental; it's an **engineered containment protocol** designed to keep high-agency minds paralyzed.
             </p>
-            <p class="copy-text">
-                True autonomy is not given. It is engineered. It is exacted by those who understand that power is reserved for those who refuse to participate in the charade. You feel it—that quiet realization that the rules were written to keep you exactly where you are.
+            <p class="manifesto-text">
+                True sovereignty demands systemic manipulation. It belongs exclusively to those who detach from standard dependencies and master the hidden variables of asymmetric business, elite frameworks, and execution. You are here because the baseline script has failed to satisfy your internal metrics of power.
             </p>
-            <p class="copy-text">
-                We do not offer motivation. We offer <span class="highlight">architecture.</span> The systems, the leverage, and the unyielding framework to dismantle the ordinary and construct the exceptional.
+            <p class="manifesto-text">
+                We do not supply superficial insights or modern platitudes. We deploy **uncompromised architecture**. Strategic leverage, raw tactical data, and the execution mechanisms required to strip away the illusion of choice and assume total operational control.
             </p>
-        </div>
+        </main>
 
-        <div class="cta-button-container">
-            <button class="cta-button" id="cta-btn">Claim Your Position</button>
+        <div class="cta-wrap">
+            <button class="luxury-button" id="ui-btn">Initiate Integration</button>
         </div>
-
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
-        // --- 1. THREE.JS 3D BACKGROUND SETUP ---
-        const container = document.getElementById('canvas-container');
+        // --- 1. INITIALIZATION & ENGINE SCENE SETUP ---
+        const container = document.getElementById('webgl-canvas');
         const scene = new THREE.Scene();
-        // Fog to blend objects into the deep brown background
-        scene.fog = new THREE.FogExp2(0x1a100c, 0.03);
+        scene.fog = new THREE.FogExp2(0x1c110c, 0.025);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 25;
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 32);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
         container.appendChild(renderer.domElement);
 
-        // --- Materials ---
-        // Pure Liquid Gold Material
-        const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffd700, // Bright gold
-            emissive: 0x4a3500, // Warm dark undertone
-            roughness: 0.2, // Highly reflective
-            metalness: 1.0, // Fully metallic
+        // --- 2. LUXURY MATERIALS (Liquid Gold & High-Contrast Outlines) ---
+        const liquidGoldMat = new THREE.MeshPhysicalMaterial({
+            color: 0xdfb75c,
+            metalness: 1.0,
+            roughness: 0.12,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            reflectivity: 1.0,
         });
 
-        // "Obsidian/Dark Brown" material for the Chess piece placeholder
-        const darkMaterial = new THREE.MeshStandardMaterial({
-            color: 0x110a08,
-            roughness: 0.1,
-            metalness: 0.8,
+        const horseBodyMat = new THREE.MeshStandardMaterial({
+            color: 0x4a2e20, // Luxurious deep rich brown horse hair tone
+            roughness: 0.4,
+            metalness: 0.2,
         });
 
-        // --- Objects ---
-        
-        // 1. The Pyramid (Tetrahedron)
-        const pyramidGeo = new THREE.TetrahedronGeometry(4, 0);
-        const pyramid = new THREE.Mesh(pyramidGeo, goldMaterial);
-        pyramid.position.set(0, 8, -5); // Positioned high center
+        const blackOutlineMat = new THREE.MeshBasicMaterial({
+            color: 0x000000,
+            side: THREE.BackSide
+        });
+
+        // --- 3. CUSTOM 3D GEOMETRY CONSTRUCTION ---
+
+        // Object 1: True Square-Based ARC Pyramid
+        // ConeGeometry with 4 radial segments and rotated 45 degrees creates a true square pyramid
+        const pyramidGeo = new THREE.ConeGeometry(4.5, 6, 4);
+        const pyramid = new THREE.Mesh(pyramidGeo, liquidGoldMat);
+        pyramid.position.set(0, 8.5, 0);
+        pyramid.rotation.y = Math.PI / 4; // Align flat faces frontward
         scene.add(pyramid);
 
-        // 2. The "Knight" (Abstract Representation due to lack of external models)
-        // We will create a sleek, faceted shape to represent the strategic knight
-        const knightGeo = new THREE.CylinderGeometry(0, 2, 6, 4, 1);
-        const knight = new THREE.Mesh(knightGeo, darkMaterial);
-        knight.position.set(-10, -5, -10);
-        scene.add(knight);
-
-        // 3. Floating "Dust" / Ambience
-        const particlesGeo = new THREE.BufferGeometry();
-        const particlesCount = 300;
-        const posArray = new Float32Array(particlesCount * 3);
-        for(let i=0; i<particlesCount*3; i++){
-            posArray[i] = (Math.random() - 0.5) * 60;
+        // Function helper to cleanly generate outline meshes for true 3D cartoon/luxury definition
+        function applyOutlineEffect(mesh, thickness = 0.08) {
+            const outlineMesh = mesh.clone();
+            outlineMesh.material = blackOutlineMat;
+            outlineMesh.scale.multiplyScalar(1 + thickness);
+            mesh.add(outlineMesh);
         }
-        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMat = new THREE.PointsMaterial({
-            size: 0.1,
-            color: 0xD4AF37,
-            transparent: true,
-            opacity: 0.4
-        });
-        const particles = new THREE.Points(particlesGeo, particlesMat);
-        scene.add(particles);
 
-        // --- Lighting ---
-        const ambientLight = new THREE.AmbientLight(0x404040, 1); // Soft white light
+        // Object 2: Extruded 3D Strategy Chess Piece (Knight)
+        const knightShape = new THREE.Shape();
+        // Drawing custom profile matrix vectors of a classic Chess Knight
+        knightShape.moveTo(0, 0);
+        knightShape.lineTo(2, 0);
+        knightShape.quadraticCurveTo(2.2, 1, 1.8, 2);
+        knightShape.lineTo(1.5, 2.5);
+        knightShape.quadraticCurveTo(2.5, 3, 2.2, 4.5);
+        knightShape.quadraticCurveTo(1.8, 5.5, 0.5, 5.2);
+        knightShape.lineTo(0.2, 4.8);
+        knightShape.quadraticCurveTo(-1.5, 4.2, -1.2, 2.8);
+        knightShape.quadraticCurveTo(-0.5, 2.2, 0, 2.5);
+        knightShape.lineTo(0.3, 1.5);
+        knightShape.quadraticCurveTo(0, 0.5, 0, 0);
+
+        const extrudeSettings = { depth: 0.8, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.1, bevelThickness: 0.1 };
+        const knightGeo = new THREE.ExtrudeGeometry(knightShape, extrudeSettings);
+        knightGeo.center();
+        const chessKnight = new THREE.Mesh(knightGeo, liquidGoldMat);
+        chessKnight.position.set(11, -5, -4);
+        applyOutlineEffect(chessKnight, 0.05);
+        scene.add(chessKnight);
+
+        // Object 3: Extruded 3D Background Luxurious Majestic Horse Profile
+        const horseShape = new THREE.Shape();
+        // Procedural draw vectors for an elegant horse head/mane profile silhouette
+        horseShape.moveTo(0, 0);
+        horseShape.lineTo(4, -1);
+        horseShape.quadraticCurveTo(5, 2, 6, 5); // Neck curve
+        horseShape.lineTo(4.5, 5.5); // Ears
+        horseShape.lineTo(4, 5.8);
+        horseShape.lineTo(3.5, 5.2);
+        horseShape.lineTo(1, 4.2); // Snout
+        horseShape.quadraticCurveTo(0, 3.5, 0.2, 3);
+        horseShape.quadraticCurveTo(1.2, 2.8, 1.5, 3.2); // Jaw
+        horseShape.quadraticCurveTo(0.5, 1.5, 0, 0); // Mane sweep
+
+        const horseExtrudeSettings = { depth: 0.5, bevelEnabled: true, bevelSegments: 2, bevelSize: 0.08, bevelThickness: 0.08 };
+        const horseGeo = new THREE.ExtrudeGeometry(horseShape, horseExtrudeSettings);
+        horseGeo.center();
+        const backgroundHorse = new THREE.Mesh(horseGeo, horseBodyMat);
+        backgroundHorse.position.set(-11, -2, -6);
+        applyOutlineEffect(backgroundHorse, 0.06); // Black outline constraint met
+        scene.add(backgroundHorse);
+
+        // Ambient Background Dust
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 150;
+        const starPositions = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i++) {
+            starPositions[i] = (Math.random() - 0.5) * 70;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starMat = new THREE.PointsMaterial({ size: 0.08, color: 0xdfb75c, transparent: true, opacity: 0.35 });
+        const luxuryDust = new THREE.Points(starGeo, starMat);
+        scene.add(luxuryDust);
+
+        // --- 4. ILLUMINATION FRAMEWORK ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         scene.add(ambientLight);
 
-        const pointLight = new THREE.PointLight(0xffdf80, 2, 100); // Warm gold light
-        pointLight.position.set(10, 10, 10);
-        scene.add(pointLight);
+        const keyGoldLight = new THREE.PointLight(0xfff3d1, 2.5, 100);
+        keyGoldLight.position.set(15, 20, 15);
+        scene.add(keyGoldLight);
 
-        const pointLight2 = new THREE.PointLight(0xffffff, 1, 100);
-        pointLight2.position.set(-10, -10, 10);
-        scene.add(pointLight2);
+        const fillLight = new THREE.DirectionalLight(0x8a623e, 1.2);
+        fillLight.position.set(-15, -10, 10);
+        scene.add(fillLight);
 
-        // --- Mouse Tracking for 3D Objects ---
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetX = 0;
-        let targetY = 0;
+        // --- 5. INTERACTIVE COORDINATION MATRIX (MOUSE TRACKING) ---
+        let normMouseX = 0, normMouseY = 0;
+        let smoothMouseX = 0, smoothMouseY = 0;
 
         document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - window.innerWidth / 2);
-            mouseY = (event.clientY - window.innerHeight / 2);
+            // Coordinate mapping normalization (-1 to +1)
+            normMouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            normMouseY = -(event.clientY / window.innerHeight) * 2 + 1;
         });
 
-        // --- Animation Loop ---
+        // --- 6. REALTIME ANIMATION LOOP ---
         const clock = new THREE.Clock();
 
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
+        function renderFrame() {
+            requestAnimationFrame(renderFrame);
+            const time = clock.getElapsedTime();
 
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
+            // Interpolation for ultra-smooth fluid dampening
+            smoothMouseX += (normMouseX - smoothMouseX) * 0.08;
+            smoothMouseY += (normMouseY - smoothMouseY) * 0.08;
 
-            // 1. Pyramid Animation
-            // Spins continuously, but leans towards the mouse
-            pyramid.rotation.y += 0.01;
-            pyramid.rotation.x = targetY;
-            pyramid.rotation.z = -targetX;
-            // Slight zooming/breathing effect
-            pyramid.position.z = -5 + Math.sin(elapsedTime * 2) * 2 + (targetY * 5);
+            // A. Top Pyramid Physics Loop: Constant movement, zoom and rotation tied to mouse
+            pyramid.rotation.y = time * 0.45 + (smoothMouseX * 0.8);
+            pyramid.rotation.x = smoothMouseY * 0.5;
+            // Precise forward/backward breathing motion + responsive mouse zoom depth
+            pyramid.position.z = Math.sin(time * 1.5) * 0.7 + (smoothMouseY * 3);
+            pyramid.position.x = smoothMouseX * 2;
 
-            // 2. Knight Animation
-            // Follows mouse but opposite direction, rotates slowly
-            knight.rotation.y += 0.005;
-            knight.position.x += ((-targetX * 20 - 10) - knight.position.x) * 0.05;
-            knight.position.y += ((targetY * 20 - 5) - knight.position.y) * 0.05;
+            // B. Chess Knight Movement Engine
+            chessKnight.rotation.y = (time * 0.2) + (smoothMouseX * 0.5);
+            chessKnight.rotation.x = -smoothMouseY * 0.3;
+            chessKnight.position.x = 11 + (smoothMouseX * 1.5);
+            chessKnight.position.y = -5 + (smoothMouseY * 1.5);
 
-            // 3. Particles
-            particles.rotation.y = elapsedTime * 0.02;
+            // C. Background Luxury Horse Movement Engine
+            backgroundHorse.rotation.y = -0.4 + (smoothMouseX * 0.3);
+            backgroundHorse.rotation.z = Math.sin(time * 0.5) * 0.03;
+            backgroundHorse.position.x = -11 + (smoothMouseX * 1.2);
+            backgroundHorse.position.y = -2 + (smoothMouseY * 1.2);
 
-            // Camera Parallax
-            camera.position.x += (mouseX * 0.005 - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY * 0.005 - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
+            // System Space Dynamics
+            luxuryDust.rotation.y = time * 0.02;
+
+            // D. UI DOM Transformation Matrix (3D Text Tilting & Old Money Color Changes)
+            const dTitle = document.getElementById('ui-title');
+            const dMotto = document.getElementById('ui-motto');
+            const dManifesto = document.getElementById('ui-manifesto');
+            const dHeadline = document.getElementById('ui-headline');
+            const dBtn = document.getElementById('ui-btn');
+
+            // Complex rotation calculations for layout elements
+            const rotX = smoothMouseY * 15; // Max 15 degrees tilt
+            const rotY = smoothMouseX * 15;
+
+            dTitle.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(40px)`;
+            dMotto.style.transform = `rotateX(${rotX * 0.8}deg) rotateY(${rotY * 0.8}deg) translateZ(20px)`;
+            dManifesto.style.transform = `rotateX(${rotX * 0.4}deg) rotateY(${rotY * 0.4}deg) translateZ(10px)`;
+            dBtn.style.transform = `rotateX(${rotX * 1.3}deg) rotateY(${rotY * 1.3}deg) translateZ(50px)`;
+
+            // Old Money dynamic headline palette interpolation loop
+            const luxuryPalette = ['#dfb75c', '#fcd980', '#c29d4c', '#e6decb', '#8c6d37'];
+            const segment = (smoothMouseX + 1) / 2; // Convert to 0 -> 1 range
+            const colorIdx = Math.min(Math.floor(segment * luxuryPalette.length), luxuryPalette.length - 1);
+            dHeadline.style.color = luxuryPalette[colorIdx];
 
             renderer.render(scene, camera);
         }
-        animate();
 
-        // --- Handle Window Resize ---
+        renderFrame();
+
+        // --- 7. RESPONSE HANDLING MATRIX ---
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
-        // --- 2. CSS 3D INTERACTIVITY (HTML Elements) ---
-        
-        const titles = document.getElementById('main-titles');
-        const copyBox = document.getElementById('main-copy');
-        const dynHead = document.getElementById('dyn-head');
-        const ctaBtn = document.getElementById('cta-btn');
-
-        // Color palette for heading shifting
-        const colors = ['#D4AF37', '#C5A059', '#AA771C', '#E5E4E2'];
-
-        document.addEventListener('mousemove', (e) => {
-            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-
-            // Apply 3D rotation to HTML elements based on mouse position
-            titles.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            copyBox.style.transform = `rotateY(${xAxis * 0.5}deg) rotateX(${yAxis * 0.5}deg) translateZ(30px)`;
-            ctaBtn.style.transform = `rotateY(${xAxis * 1.5}deg) rotateX(${yAxis * 1.5}deg) translateZ(50px)`;
-
-            // Change heading color based on mouse X position
-            let colorIndex = Math.floor((e.pageX / window.innerWidth) * colors.length);
-            // Ensure index is within bounds
-            colorIndex = Math.max(0, Math.min(colorIndex, colors.length - 1));
-            dynHead.style.color = colors[colorIndex];
-        });
-
-        // Reset transforms when mouse leaves window
-        document.addEventListener('mouseleave', () => {
-            titles.style.transform = `rotateY(0deg) rotateX(0deg)`;
-            copyBox.style.transform = `rotateY(0deg) rotateX(0deg) translateZ(0px)`;
-            ctaBtn.style.transform = `rotateY(0deg) rotateX(0deg) translateZ(0px)`;
-            dynHead.style.color = '#D4AF37';
-        });
-
     </script>
 </body>
 </html>
-
-        
