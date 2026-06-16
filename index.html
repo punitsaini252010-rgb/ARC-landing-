@@ -1,171 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARC | THE SOVEREIGN VAULT</title>
+    <title>THE ARC VAULT — THE OVERRIDE CODE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="module">
+        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.min.js';
+        import { FontLoader } from 'https://unpkg.com/three@0.128.0/examples/jsm/loaders/FontLoader.js';
+        import { TextGeometry } from 'https://unpkg.com/three@0.128.0/examples/jsm/geometries/TextGeometry.js';
+        window.THREE = THREE; window.FontLoader = FontLoader; window.TextGeometry = TextGeometry;
+    </script>
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sovereign: ['Cinzel', 'serif'], sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: { royalUmber: '#1E1611', liquidGold: '#D4AF37' }
+                    fontFamily: {
+                        sovereign: ['Cinzel', 'serif'],
+                        tactical: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        matrixBlack: '#0A0807',
+                        leatherUmber: '#1E1611',
+                        liquidGold: '#D4AF37',
+                        liquidSilver: '#E5E4E2',
+                        imperialPurple: '#2E1A47',
+                        crimsonRed: '#8B0000',
+                        skyCyan: '#00E5FF',
+                    }
                 }
             }
         }
     </script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #0A0807; }
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; }
-        #ui-layer { position: relative; z-index: 10; pointer-events: none; }
-        .interactive-btn { pointer-events: auto; }
+        body { background-color: #1E1611; color: #E5E4E2; overflow-x: hidden; }
         .gold-grad-text { background: linear-gradient(135deg, #FFF 30%, #D4AF37 70%, #AA771C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-panel { background: rgba(10, 8, 7, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.2); }
+        .purple-glow { box-shadow: 0 0 50px -10px rgba(46, 26, 71, 0.6); }
+        .cyber-cyan-glow { box-shadow: 0 0 20px -3px rgba(0, 229, 255, 0.3); }
+        .cyber-red-glow { box-shadow: 0 0 20px -3px rgba(139, 0, 0, 0.3); }
+        ::-webkit-scrollbar { width: 0px; }
+        #webgl-canvas-logo { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        .mark-interactive { pointer-events: auto !important; cursor: grab; }
+        .mark-interactive:active { cursor: grabbing; }
     </style>
 </head>
-<body class="font-sans antialiased text-white">
+<body class="font-tactical antialiased">
 
-    <div id="canvas-container"></div>
+    <section class="relative min-h-screen flex flex-col justify-center items-center px-4 pt-32 pb-24 border-b border-amber-950/20 purple-glow relative overflow-hidden">
+        <canvas id="webgl-canvas-logo" class="mark-interactive"></canvas>
 
-    <main id="ui-layer" class="w-full h-screen flex flex-col justify-center items-center px-4">
-        <div class="glass-panel p-10 md:p-16 rounded-2xl max-w-4xl w-full text-center shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-liquidGold/40 m-4"></div>
-            <div class="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-liquidGold/40 m-4"></div>
-
-            <h1 class="font-sovereign text-5xl md:text-7xl font-black tracking-tighter mb-6">
-                ENTER THE <br /> <span class="gold-grad-text">ARC MATRIX</span>
+        <div class="max-w-5xl mx-auto text-center z-20 space-y-8 relative">
+            <h1 class="font-sovereign text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.1] text-white">
+                They Built A Matrix to <br class="hidden md:inline"/>
+                <span class="gold-grad-text">Keep You Broke.</span>
             </h1>
             
-            <p class="text-sm md:text-base text-gray-300 tracking-[0.2em] uppercase font-light max-w-2xl mx-auto mb-10 leading-relaxed">
-                The physics of wealth have been hidden. The 3D geometry of the new economy is reserved for operators.
+            <p class="font-sovereign text-xs sm:text-sm tracking-[0.25em] text-gray-400 max-w-2xl mx-auto uppercase leading-relaxed">
+                Your salary is calculated debt. Your path is engineered compliance. This operational framework, built by architects, is your cryptographic key to geometric leverage.
             </p>
 
-            <a href="https://your-gumroad-link.com" class="interactive-btn inline-block px-12 py-5 bg-royalUmber border border-liquidGold text-liquidGold font-sovereign text-xs font-black tracking-[0.3em] uppercase transition-all duration-500 hover:bg-liquidGold hover:text-black hover:shadow-[0_0_30px_rgba(212,175,55,0.4)]">
-                Unlock The Architecture
-            </a>
+            <div class="max-w-4xl mx-auto p-1.5 rounded-xl bg-gradient-to-b from-amber-950/30 to-transparent border border-amber-950/30 shadow-2xl relative">
+                <div class="bg-matrixBlack rounded-lg p-5 border border-amber-950/20 text-left space-y-4">
+                    <div class="flex items-center justify-between border-b border-amber-950/30 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-crimsonRed/60 cyber-red-glow"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-liquidGold/60"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-skyCyan/60 cyber-cyan-glow"></span>
+                        </div>
+                        <span class="font-sovereign text-[9px] tracking-widest text-gray-500 uppercase">SYSTEM://ARC_VAULT_DEPLOYMENT_ARRAY</span>
+                    </div>
+                    <div class="font-mono text-xs text-gray-400 space-y-2.5 leading-relaxed">
+                        <p><span class="text-skyCyan tracking-widest">&gt;</span> ACTIVE DEPLOYMENT PIPELINE SECURED...</p>
+                        <p><span class="text-liquidGold">[PHASE 01]</span> THE MIND & INSTANT MOBILIZATION — OPERATIONAL</p>
+                        <p><span class="text-liquidGold">[PHASE 02]</span> CRYPTO FUTURES / ALGORITHMIC RISK MATH — OPERATIONAL</p>
+                        <p><span class="text-gray-600">[PHASE 03]</span> OFFSHORE IMPERIAL HOLDINGS — STANDING BY</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-10">
+                <a href="https://your-gumroad-ticket-link.com" 
+                   class="inline-block relative group px-14 py-6 bg-matrixBlack border-2 border-[#AA771C] text-white rounded-lg font-sovereign text-xs font-black tracking-[0.3em] uppercase transition-all duration-300 transform hover:-translate-y-1 hover:border-liquidGold hover:shadow-[0_0_20px_0_rgba(212,175,55,0.4)]">
+                    ⚔️ Secure Vault Access Now
+                </a>
+                <p class="text-[10px] tracking-widest text-gray-500 uppercase mt-4">One-time operational entry fee required. Immutable secure access.</p>
+            </div>
         </div>
-    </main>
+    </section>
 
-    <script>
-        // 1. Scene Setup
-        const scene = new THREE.Scene();
-        // Add a very subtle dark imperial purple fog to blend the 3D object into the background
-        scene.fog = new THREE.FogExp2(0x0A0807, 0.02);
+    <section class="max-w-5xl mx-auto px-4 py-24 grid md:grid-cols-2 gap-12 items-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_left,rgba(46,26,71,0.2)_0%,transparent_60%)] pointer-events-none"></div>
+        <div class="space-y-6 z-10 relative">
+            <h2 class="font-sovereign text-2xl sm:text-3xl font-bold tracking-wide text-white leading-tight">
+                The System Demands <br class="hidden sm:inline"/>
+                <span class="text-crimsonRed">Your Neutralization.</span>
+            </h2>
+            <div class="w-16 h-[2px] bg-gradient-to-r from-crimsonRed to-transparent"></div>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Modern civilization does not design classrooms or corporate ranks to make you sovereign. They are built by mathematicians and psychologists to extract your focus, trade your limited hours for decaying fiat currency, and biologically neutralize your conquering drive through engineered compliance.
+            </p>
+            <p class="text-gray-400 text-sm leading-relaxed font-semibold text-liquidSilver">
+                You do not require another course. You require a cryptographic key to geometric leverage.
+            </p>
+        </div>
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        <div class="bg-royalUmber/30 rounded-xl p-8 border border-amber-950/20 shadow-xl space-y-6 z-10 relative">
+            <h3 class="font-sovereign text-xs tracking-widest text-liquidGold font-black uppercase">The Cold Mathematical Reality</h3>
+            <ul class="space-y-4 text-xs tracking-wide text-gray-300">
+                <li class="flex items-start gap-3">
+                    <span class="text-crimsonRed font-bold mt-0.5 cyber-red-glow">✕</span>
+                    <span>Traditional education models anchor you into $50,000+ linear debt structures, neutralizing your primary cash mobilization speed.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-crimsonRed font-bold mt-0.5 cyber-red-glow">✕</span>
+                    <span>Standard corporate compensation layers scale linearly, locking your earnings under an artificial ceiling controlled by others.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-skyCyan font-bold mt-0.5 cyber-cyan-glow">✓</span>
+                    <span class="text-white font-semibold">The ARC Weaponry: Symmetrically scalable digital systems designed by elite engineers to extract asymmetrical financial leverage from zero capital.</span>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto px-4 text-center space-y-12 pb-24 relative overflow-hidden">
+        <div class="text-center space-y-4 pb-12">
+            <h2 class="font-sovereign text-3xl md:text-4xl font-black tracking-wide text-white">
+                The closed Arsenal <span class="gold-grad-text">Directory</span>
+            </h2>
+            <p class="text-xs tracking-widest text-gray-500 uppercase">Inside the closed directory of the ARC Operating Engine</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="bg-matrixBlack p-6 rounded-xl border border-amber-950/30 space-y-4 text-left transition-all hover:border-amber-950/50 hover:bg-royalUmber/10 hover:-translate-y-1">
+                <div class="text-[10px] font-mono tracking-widest text-skyCyan uppercase flex justify-between">
+                    <span>PHASE 01 // SOVEREIGN MOBILIZATION</span>
+                    <span class="cyber-cyan-glow">✓</span>
+                </div>
+                <h3 class="font-sovereign text-sm font-bold text-white tracking-wider">Instant MOBILIZATION</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">
+                    Eradicating unforced errors. Re-engineering primary execution speed. Deploying native digital distribution pathways built to process automated capital deployment rapidly.
+                </p>
+            </div>
+
+            <div class="bg-matrixBlack p-6 rounded-xl border border-amber-950/30 space-y-4 text-left transition-all hover:border-amber-950/50 hover:bg-royalUmber/10 hover:-translate-y-1">
+                <div class="text-[10px] font-mono tracking-widest text-liquidGold uppercase flex justify-between">
+                    <span>PHASE 02 // ALGORITHMIC GEOMETRY</span>
+                    <span>✓</span>
+                </div>
+                <h3 class="font-sovereign text-sm font-bold text-white tracking-wider">ASYMMETRICAL SYSTEMS</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">
+                    Mastering geometric risk math, short-execution strategies, and native algorithmic setups across complex modern digital asset markets. Trading price action, not course hype.
+                </p>
+            </div>
+
+            <div class="bg-matrixBlack p-6 rounded-xl border border-amber-950/30 space-y-4 text-left transition-all hover:border-amber-950/50 hover:bg-royalUmber/10 hover:-translate-y-1 sm:col-span-2 md:col-span-1">
+                <div class="text-[10px] font-mono tracking-widest text-purple-400 uppercase flex justify-between">
+                    <span>PHASE 03 // INFINITE SCALE</span>
+                    <span class="purple-glow">🔒</span>
+                </div>
+                <h3 class="font-sovereign text-sm font-bold text-white tracking-wider">THE EMPIRE SHIELD</h3>
+                <p class="text-gray-400 text-xs leading-relaxed">
+                    Insulating geometric capital behind sovereign holding-company mechanics, offshore holdings, and elite private diversification models. Access unlocked at $50k profit threshold.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-4xl mx-auto pb-20 relative px-4 overflow-hidden h-32">
+        <canvas id="webgl-divider"></canvas>
+    </div>
+
+    <section class="max-w-4xl mx-auto px-4 py-32 text-center space-y-10 border-t border-amber-950/20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_right,rgba(46,26,71,0.2)_0%,transparent_60%)] pointer-events-none"></div>
         
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        <h2 class="font-sovereign text-2xl sm:text-4xl font-bold tracking-tight text-white z-10 relative">
+            The Door Is Sealed. <br/>
+            <span class="gold-grad-text">Authorize Access?</span>
+        </h2>
+        <p class="text-gray-400 text-xs max-w-xl mx-auto leading-relaxed uppercase tracking-widest z-10 relative">
+            The matrix is infinite. The data you are ignoring right now is mandatory for the future. Cross the wall, or retreat. The decision is irrevocable.
+        </p>
 
-        // 2. The Golden Vault Geometry (Complex Torus Knot)
-        const geometry = new THREE.TorusKnotGeometry(12, 3.5, 300, 40, 2, 3);
-        
-        // 3. Hyper-Realistic Metallic Material
-        const material = new THREE.MeshStandardMaterial({
-            color: 0xD4AF37,        // Liquid Gold
-            metalness: 0.9,         // Highly metallic
-            roughness: 0.15,        // Very smooth/reflective
-            wireframe: false
-        });
+        <div class="max-w-md mx-auto relative h-28 px-4 py-4 z-10">
+            <canvas id="webgl-canvas-join" class="w-full h-full cursor-pointer hover:cyber-cyan-glow transition-shadow duration-300"></canvas>
+            <a href="https://your-gumroad-ticket-link.com" id="webgl-join-button-link" class="absolute inset-0 z-20"></a>
+            <p class="text-[10px] tracking-widest text-gray-500 uppercase mt-2">ONE-TIME operational allocation fee applies. secure access.</p>
+        </div>
 
-        const torusKnot = new THREE.Mesh(geometry, material);
-        scene.add(torusKnot);
+        <div class="pt-20 text-[9px] tracking-[0.3em] text-gray-600 uppercase font-mono z-10 relative">
+            © ARC OPERATIONAL ENGINE. SYSTEM ARCHITECTURE SECURED BY VERCEL & WHOP MANUAL ACCESS GATEKEEPER.
+        </div>
+    </section>
 
-        // 4. Floating Particles (Gold Dust)
-        const particleGeometry = new THREE.BufferGeometry();
-        const particleCount = 1500;
-        const posArray = new Float32Array(particleCount * 3);
-        for(let i = 0; i < particleCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 100; // Spread across the scene
-        }
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particleMaterial = new THREE.PointsMaterial({
-            size: 0.15,
-            color: 0xD4AF37,
-            transparent: true,
-            opacity: 0.6,
-            blending: THREE.AdditiveBlending
-        });
-        const particleMesh = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particleMesh);
+    <script type="module">
+        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.min.js';
+        import { FontLoader } from 'https://unpkg.com/three@0.128.0/examples/jsm/loaders/FontLoader.js';
+        import { TextGeometry } from 'https://unpkg.com/three@0.128.0/examples/jsm/geometries/TextGeometry.js';
 
-        // 5. Studio Lighting (Crucial for realism)
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-
-        const pointLight1 = new THREE.PointLight(0xffffff, 2);
-        pointLight1.position.set(20, 20, 20);
-        scene.add(pointLight1);
-
-        const pointLight2 = new THREE.PointLight(0x00E5FF, 1.5); // Cyan underglow
-        pointLight2.position.set(-20, -20, -20);
-        scene.add(pointLight2);
-
-        const pointLight3 = new THREE.PointLight(0x8B0000, 2); // Crimson side glow
-        pointLight3.position.set(20, -20, 10);
-        scene.add(pointLight3);
-
-        camera.position.z = 40;
-
-        // 6. Interactive Mouse Tracking
-        let mouseX = 0;
-        let mouseY = 0;
-        let targetX = 0;
-        let targetY = 0;
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
-
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX) * 0.001;
-            mouseY = (event.clientY - windowHalfY) * 0.001;
-        });
-
-        // 7. Animation Loop
-        const clock = new THREE.Clock();
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
-
-            // Smooth mouse follow rotation
-            targetX = mouseX * 0.5;
-            targetY = mouseY * 0.5;
-            
-            torusKnot.rotation.y += 0.05 * (targetX - torusKnot.rotation.y);
-            torusKnot.rotation.x += 0.05 * (targetY - torusKnot.rotation.x);
-            
-            // Constant base rotation
-            torusKnot.rotation.z += 0.002;
-            torusKnot.rotation.y += 0.001;
-
-            // Animate particles
-            particleMesh.rotation.y = -elapsedTime * 0.05;
-            particleMesh.rotation.x = elapsedTime * 0.02;
-
-            // Slowly pulse the geometry
-            torusKnot.scale.set(
-                1 + Math.sin(elapsedTime * 0.5) * 0.02,
-                1 + Math.sin(elapsedTime * 0.5) * 0.02,
-                1 + Math.sin(elapsedTime * 0.5) * 0.02
-            );
-
-            renderer.render(scene, camera);
-        }
-
-        // 8. Responsive Resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        animate();
-    </script>
-</body>
-</html>
+        // --------------------------------------------------
+        // ARC VAULT 3D TEXT ENGINE FONT (Cryptographic Base64 standard font)
+        // --------------------------------------------------
+        const vaultCryptFont64 = "data:application/font-woff;base64,d09GRgABAAAAABWcAAoAAAAAF2wAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAAA+AAAAGAAAABgWF5Yf2NtYXAAAAFgAAAAUAAAAFAU+xSXY3Z0IAAAAaQAAABMAAAATA5ZIn9mcGdtAAAB5AAABGgAAARogXbUj2dseWYAAAb0AAAA3gAAAO6Qf750aGVhZAAAAzgAAAAyAAAAMgj7U4RoaGVhAAA4NAAAACAAAAAgCAwDAmhtbXgAADhUAAAAIAAAACAECAAFbG9jYQA4XAAAACAAAAAgECAQFm1heHAAAAhMAAAAFgAAABYAFgAWbmFtZQAICXQAAAFkAAAFY5yM/F9wb3N0AAAJNAAAAFgAAABYAFgAWnByZXAAAAm8AAAAUwAAAFMxL53be3R5cGUAAAmsAAAACAAAAAgCAAEAAAAEAAAAAAAABAAAAAAAAB4AAB4AAB4AAB4AAB4AAB4AAB4AAB4AAAEAAAAAAAABAAAAAAAAB4AAAAAAAAD8AQAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBA
