@@ -4,34 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ARC | Awaken. Rise. Conquer.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800;900&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Old Money Color Palette */
-            --bg-deep: #0a0806;
-            --bg-brown: #1a120e;
-            --gold-light: #F9E596;
-            --gold-core: #D4AF37;
-            --gold-dark: #8C6D23;
-            --text-main: #EAEAEA;
-            --text-muted: #A09D9A;
-            --blood-red: #4A0E0E;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            /* Old Money / Royal Color Palette */
+            --bg-base: #6B4226;          /* Deep rich brown base */
+            --bg-accent: #014225;        /* British Racing Green */
+            --gold-light: #F9E596;       /* Bright Gold */
+            --gold-core: #D4AF37;        /* Pure Gold */
+            --silver: #C0C0C0;           /* Elegant Silver */
+            --text-light: #FDFBF7;       /* Off-white for readability */
+            --cyan-accent: #008B8B;      /* Dark Cyan for subtle contrast */
         }
 
         body, html {
+            margin: 0;
+            padding: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--bg-deep);
-            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-accent) 100%);
+            font-family: 'Lora', serif;
+            color: var(--text-light);
             overflow-x: hidden;
-            /* Prevent text selection to feel more like an app */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -46,22 +41,22 @@
             width: 100vw;
             height: 100vh;
             z-index: 0;
-            pointer-events: none; /* Let clicks pass through */
+            pointer-events: none; /* Let clicks pass through to UI */
         }
 
-        /* Gradient Overlay to ensure text readability */
+        /* Subtle Vignette Overlay */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(10, 8, 6, 0.85) 100%);
+            background: radial-gradient(circle at center, transparent 30%, rgba(10, 8, 6, 0.85) 100%);
             z-index: 1;
             pointer-events: none;
         }
 
-        /* Main Content Container - 3D Perspective Enabled */
+        /* Main Content Container */
         #content-layer {
             position: relative;
             z-index: 10;
@@ -71,166 +66,128 @@
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
-            perspective: 1200px; /* Crucial for 3D CSS effects */
-            overflow-y: auto;
+            /* Setup for 3D perspective on the text */
+            perspective: 1000px; 
         }
 
-        /* 3D Reactive Container */
-        .tilt-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 800px;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-
-        /* Hero Section */
-        .hero {
+        /* Container specifically for the 3D text elements */
+        #interactive-header {
             text-align: center;
-            margin-top: 15vh;
+            margin-top: 30vh; /* Push down to leave space for the 3D pyramid */
             margin-bottom: 60px;
-            transform: translateZ(60px); /* Pops out in 3D */
+            transform-style: preserve-3d;
+            /* Smooth transition when mouse leaves */
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
         }
 
         .title-arc {
             font-family: 'Cinzel', serif;
-            font-size: clamp(6rem, 15vw, 10rem);
+            font-size: clamp(5rem, 12vw, 9rem);
             font-weight: 900;
             line-height: 0.9;
             margin: 0;
-            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-core) 50%, var(--gold-dark) 100%);
+            /* Gold Gradient Text */
+            background: linear-gradient(to bottom, var(--gold-light) 0%, var(--gold-core) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0px 10px 30px rgba(212, 175, 55, 0.2);
+            text-shadow: 0px 15px 30px rgba(0,0,0,0.6);
             letter-spacing: 0.05em;
+            transform: translateZ(80px); /* Pop out more */
         }
 
         .subtitle {
             font-family: 'Cinzel', serif;
-            font-size: clamp(1rem, 3vw, 1.8rem);
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
             font-weight: 700;
-            color: var(--text-main);
-            letter-spacing: 0.4em;
-            margin-top: 10px;
+            color: var(--silver);
+            letter-spacing: 0.5em;
+            margin-top: 15px;
             text-transform: uppercase;
-            text-shadow: 0px 4px 10px rgba(0,0,0,0.8);
+            text-shadow: 0px 5px 15px rgba(0,0,0,0.8);
+            transform: translateZ(40px); /* Pop out slightly less */
         }
 
-        /* Content Blocks */
-        .glass-card {
-            background: rgba(30, 20, 15, 0.6);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+        /* Content Section - Static */
+        .content-wrapper {
+            max-width: 700px;
+            text-align: center;
+            margin-top: 40px;
+            padding: 40px;
+            background: rgba(30, 22, 17, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 4px;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 4px;
-            padding: 40px;
-            margin-bottom: 30px;
-            width: 100%;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            transform: translateZ(30px); /* Slightly elevated */
         }
 
-        h2 {
+        .section-heading {
             font-family: 'Cinzel', serif;
-            font-size: 2rem;
             color: var(--gold-core);
+            font-size: 2rem;
             margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .punchy-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: var(--text-light);
+        }
+
+        .punchy-text strong {
+            color: var(--liquidGold);
             font-weight: 600;
-            text-align: center;
+            font-family: 'Cinzel', serif;
             letter-spacing: 1px;
         }
 
-        p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            text-align: justify;
-        }
-
-        p strong {
-            color: var(--text-main);
-            font-weight: 600;
-        }
-
-        .highlight {
-            color: var(--gold-light);
-        }
-
-        /* The Ledger (Social Proof) */
-        .ledger-box {
-            text-align: center;
-            padding: 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            margin: 40px 0;
-            transform: translateZ(40px);
-        }
-
-        .ledger-box a {
+        /* The Ledger Link */
+        .ledger-link {
+            display: inline-block;
+            margin-top: 30px;
+            margin-bottom: 40px;
             font-family: 'Cinzel', serif;
-            color: var(--gold-core);
-            font-size: 1.3rem;
+            font-size: 1.2rem;
+            color: var(--cyan-accent);
             text-decoration: none;
             letter-spacing: 2px;
+            border-bottom: 1px solid var(--cyan-accent);
+            padding-bottom: 5px;
             transition: all 0.3s ease;
         }
-        
-        .ledger-box a:hover {
-            color: var(--gold-light);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+
+        .ledger-link:hover {
+            color: var(--silver);
+            border-bottom-color: var(--silver);
+            text-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
         }
 
         /* Action Button */
-        .action-container {
-            margin-top: 20px;
-            margin-bottom: 80px;
-            text-align: center;
-            transform: translateZ(50px);
-        }
-
         .btn-gold {
             display: inline-block;
-            background: linear-gradient(to bottom, #d4af37 0%, #aa771c 100%);
+            background: linear-gradient(to bottom, #d4af37 0%, #8c6d23 100%);
             color: #0a0806;
             font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 900;
-            padding: 20px 50px;
+            padding: 20px 60px;
             border: 1px solid #f9e596;
             border-radius: 2px;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.4);
             transition: all 0.2s ease;
             text-decoration: none;
         }
 
         .btn-gold:hover {
             background: linear-gradient(to bottom, #f9e596 0%, #d4af37 100%);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5), inset 0 2px 0 rgba(255,255,255,0.6);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.6);
             transform: translateY(-2px);
-        }
-
-        .btn-gold:active {
-            transform: translateY(2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold-core); }
-
-        @media (max-width: 768px) {
-            .glass-card { padding: 25px; }
-            h2 { font-size: 1.6rem; }
-            p { font-size: 1rem; }
-            .hero { margin-top: 10vh; }
         }
     </style>
 </head>
@@ -240,176 +197,197 @@
     <div class="overlay"></div>
 
     <div id="content-layer">
-        <div class="tilt-wrapper" id="tilt-target">
-            
-            <header class="hero">
-                <h1 class="title-arc">ARC</h1>
-                <div class="subtitle">Awaken • Rise • Conquer</div>
-            </header>
-
-            <div class="glass-card">
-                <h2>The Illusion of Scarcity</h2>
-                <p>The world you have been taught to navigate is a carefully constructed system designed to keep you dependent. You trade the most valuable asset you possess—your time—for a fiat currency that depreciates daily. <strong>This is not an accident; it is the design.</strong></p>
-                <p>You are here because you have sensed this. You are tired of the median. You are tired of waiting for permission to live on your own terms. ARC is not a community; it is an exit strategy.</p>
-            </div>
-
-            <div class="glass-card">
-                <h2>The Vehicles of Wealth</h2>
-                <p>We do not teach outdated theory. We provide the precise, battle-tested blueprints used by the 1% to generate location-independent capital. We have identified <strong>multiple high-yield business models</strong> that thrive in the current economic climate.</p>
-                <p>To protect the integrity and profitability of these methods for our members, the exact nature of these vehicles remains strictly confidential to the public. <strong>When everyone knows the play, the edge is lost.</strong> Inside ARC, you will be handed the playbook, step-by-step.</p>
-            </div>
-
-            <div class="glass-card">
-                <h2>Timeline & Expectations</h2>
-                <p>We do not sell overnight miracles. We sell <strong>inevitability through execution</strong>. If you follow the protocols, your trajectory is guaranteed.</p>
-                <p><strong>Phase 1 (Days 1-30): The Awakening.</strong> Destruction of limiting beliefs. Total mental reconfiguration. You will select your wealth vehicle and establish your foundation.</p>
-                <p><strong>Phase 2 (Days 30-90): The Rise.</strong> Aggressive execution. You will launch your systems, test the market, and secure your first scalable revenue streams.</p>
-                <p><strong>Phase 3 (Days 90+): The Conquest.</strong> Scaling, automation, and asset protection. You transition from an operator to an owner.</p>
-            </div>
-
-            <div class="ledger-box">
-                <a href="#results" target="_blank" rel="noopener noreferrer">
-                    [ VIEW THE LEDGER : VERIFIED MEMBER RESULTS ]
-                </a>
-            </div>
-
-            <div class="action-container">
-                <a href="#checkout" class="btn-gold">Initiate Transfer</a>
-            </div>
-
+        
+        <div id="interactive-header">
+            <h1 class="title-arc">ARC</h1>
+            <div class="subtitle">Awaken • Rise • Conquer</div>
         </div>
+
+        <div class="content-wrapper">
+            <h2 class="section-heading">The Elite Blueprint</h2>
+            
+            <p class="punchy-text">
+                The world operates on systems designed to keep you ordinary. <strong>We provide the exit.</strong>
+            </p>
+            
+            <p class="punchy-text">
+                Within ARC, you will gain access to <strong>FOUR highly-guarded, asymmetric business models.</strong> These are not trendy gimmicks. They are the exact, scalable frameworks utilized by the elite to generate exponential wealth, regardless of the global economy. 
+            </p>
+            
+            <p class="punchy-text">
+                We do not reveal the methods to the public. <strong>True edge requires confidentiality.</strong> 
+            </p>
+
+            <p class="punchy-text" style="border-left: 3px solid var(--gold-core); padding-left: 15px; margin-top: 30px;">
+                <strong>The Timeline:</strong><br>
+                Days 1-30: Complete Cognitive Rewiring.<br>
+                Days 30-90: System Deployment & Market Testing.<br>
+                Days 90+: Autonomy, Scale, and Wealth Preservation.
+            </p>
+
+            <p class="punchy-text">
+                The result? Total financial sovereignty. You become the architect of your reality.
+            </p>
+        </div>
+
+        <a href="#ledger" class="ledger-link">VERIFY THE RESULTS: THE ARC LEDGER</a>
+
+        <a href="#checkout" class="btn-gold">Gain Access</a>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
         /**
-         * 1. THREE.JS 3D BACKGROUND (Pyramid & Particles)
+         * 1. THREE.JS 3D BACKGROUND SETUP
          */
         const container = document.getElementById('webgl-container');
         const scene = new THREE.Scene();
         
-        // Camera setup
+        // Setup Camera
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 20;
+        camera.position.z = 25; // Pull back to see the pyramid
 
+        // Setup Renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // --- Create the Gold Outlined Pyramid ---
-        // A pyramid is a ConeGeometry with 4 radial segments
-        const radius = 5;
-        const height = 7;
-        const radialSegments = 4;
-        const geometry = new THREE.ConeGeometry(radius, height, radialSegments);
+        /**
+         * 2. CREATING THE 3D OBJECTS
+         */
+
+        // A. The Solid Gold Pyramid
+        // ConeGeometry(radius, height, radialSegments) - 4 segments makes it a square pyramid
+        const pyramidGeo = new THREE.ConeGeometry(5, 7, 4);
         
-        // We want ONLY the outline. We use EdgesGeometry.
-        const edges = new THREE.EdgesGeometry(geometry);
-        
-        // The material for the glowing gold lines
-        const lineMaterial = new THREE.LineBasicMaterial({ 
-            color: 0xD4AF37, 
-            linewidth: 2,
-            transparent: true,
-            opacity: 0.8
+        // High-quality gold material
+        const goldMaterial = new THREE.MeshStandardMaterial({
+            color: 0xD4AF37,       // Base Gold
+            emissive: 0x2a1b00,    // Slight dark glow
+            roughness: 0.2,        // Very shiny
+            metalness: 1.0,        // Fully metallic
+            flatShading: true      // Gives it clean, sharp edges
         });
+
+        const pyramid = new THREE.Mesh(pyramidGeo, goldMaterial);
         
-        const pyramid = new THREE.LineSegments(edges, lineMaterial);
-        // Position it higher up behind the text
-        pyramid.position.y = 3;
+        // Position it high up, behind where the ARC text will be
+        pyramid.position.set(0, 7, -5); 
+        // Rotate so a flat face is pointing somewhat forward, but looks dynamic
+        pyramid.rotation.y = Math.PI / 4; 
         scene.add(pyramid);
 
-        // --- Create Background Particles (The "Matrix" Dust) ---
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 700;
-        const posArray = new Float32Array(particlesCount * 3);
+        // B. Background Floating Objects (Small silver/cyan diamonds to add depth)
+        const particles = new THREE.Group();
+        const particleGeo = new THREE.OctahedronGeometry(0.2, 0); // Diamond shape
+        
+        const silverMat = new THREE.MeshStandardMaterial({ color: 0xE5E4E2, metalness: 0.8, roughness: 0.2 });
+        const cyanMat = new THREE.MeshStandardMaterial({ color: 0x00E5FF, metalness: 0.5, roughness: 0.5, emissive: 0x004455 });
 
-        for(let i = 0; i < particlesCount * 3; i++) {
-            // Spread particles across a wide area
-            posArray[i] = (Math.random() - 0.5) * 60;
+        for(let i = 0; i < 150; i++) {
+            // Alternate materials
+            const mat = Math.random() > 0.5 ? silverMat : cyanMat;
+            const mesh = new THREE.Mesh(particleGeo, mat);
+            
+            // Random positions in a wide area behind the pyramid
+            mesh.position.x = (Math.random() - 0.5) * 60;
+            mesh.position.y = (Math.random() - 0.5) * 60;
+            mesh.position.z = (Math.random() - 0.5) * 40 - 10; // Keep them behind the text
+            
+            // Random rotation
+            mesh.rotation.x = Math.random() * Math.PI;
+            mesh.rotation.y = Math.random() * Math.PI;
+            
+            particles.add(mesh);
         }
-        
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.05,
-            color: 0xaa771c,
-            transparent: true,
-            opacity: 0.5,
-            blending: THREE.AdditiveBlending
-        });
-        
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
+        scene.add(particles);
 
         /**
-         * 2. INTERACTIVITY & ANIMATION
+         * 3. LIGHTING (Crucial for the Gold effect)
          */
-        
-        // Variables to track mouse/touch position
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Soft base light
+        scene.add(ambientLight);
+
+        // Main bright light hitting the pyramid
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(10, 20, 15);
+        scene.add(dirLight);
+
+        // A colored fill light to add richness (British Racing Green tint)
+        const fillLight = new THREE.DirectionalLight(0x014225, 2);
+        fillLight.position.set(-15, -10, 5);
+        scene.add(fillLight);
+
+        /**
+         * 4. MOUSE/TOUCH TRACKING
+         */
         let mouseX = 0;
         let mouseY = 0;
         let targetX = 0;
         let targetY = 0;
-
+        
         const windowHalfX = window.innerWidth / 2;
         const windowHalfY = window.innerHeight / 2;
 
-        // Desktop Mouse Tracking
         document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - windowHalfX);
-            mouseY = (event.clientY - windowHalfY);
+            // Normalized values between -1 and 1
+            mouseX = (event.clientX - windowHalfX) / windowHalfX;
+            mouseY = (event.clientY - windowHalfY) / windowHalfY;
         });
 
-        // Mobile Touch Tracking
         document.addEventListener('touchmove', (event) => {
             if(event.touches.length > 0) {
-                mouseX = (event.touches[0].clientX - windowHalfX);
-                mouseY = (event.touches[0].clientY - windowHalfY);
+                mouseX = (event.touches[0].clientX - windowHalfX) / windowHalfX;
+                mouseY = (event.touches[0].clientY - windowHalfY) / windowHalfY;
             }
         });
 
-        const clock = new THREE.Clock();
+        // Reset text on mouse leave
+        const headerElement = document.getElementById('interactive-header');
+        document.addEventListener('mouseleave', () => {
+            mouseX = 0;
+            mouseY = 0;
+            headerElement.style.transform = `rotateX(0deg) rotateY(0deg)`;
+        });
 
-        // The HTML Wrapper for CSS 3D Tilting
-        const tiltTarget = document.getElementById('tilt-target');
+        /**
+         * 5. ANIMATION LOOP
+         */
+        const clock = new THREE.Clock();
 
         function animate() {
             requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
+            const time = clock.getElapsedTime();
 
-            // Smooth interpolation for mouse movement
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
+            // Smooth interpolation (easing) for the target values
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
 
             // --- Animate 3D Pyramid ---
-            // Base rotation
+            // Constant slow spin
             pyramid.rotation.y += 0.005; 
-            // React to mouse (tilting)
-            pyramid.rotation.x = targetY * 1.5;
-            pyramid.rotation.z = -targetX * 1.5;
-            
-            // "Breathing" and moving towards/away from user based on Y axis
-            pyramid.position.z = Math.sin(elapsedTime * 1.5) * 0.5 + (targetY * 5);
-            // Move left/right based on X axis
-            pyramid.position.x = targetX * 5;
+            // React to mouse: tilt and turn
+            pyramid.rotation.x = targetY * 0.5; // Look up/down
+            pyramid.position.x = targetX * 3;   // Move left/right slightly
+            // Slight floating effect
+            pyramid.position.y = 7 + Math.sin(time * 1.5) * 0.3;
 
-            // --- Animate Particles ---
-            particlesMesh.rotation.y = -elapsedTime * 0.02;
-            particlesMesh.position.x = targetX * 2;
-            particlesMesh.position.y = -targetY * 2;
+            // --- Animate Background Particles ---
+            particles.rotation.y = time * 0.03;
+            // Particles react opposite to pyramid for depth
+            particles.position.x = -targetX * 2;
+            particles.position.y = targetY * 2;
 
-            // --- Animate HTML UI (CSS 3D Tilt) ---
-            // Calculate rotation degrees (limited to a subtle range)
-            const rotX = -(mouseY / windowHalfY) * 10; // Max 10 deg tilt
-            const rotY = (mouseX / windowHalfX) * 10;
-            
-            // Apply CSS transform. 
-            // translateZ is handled in CSS, we just apply the X/Y rotation to the wrapper
-            tiltTarget.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+            // --- Animate HTML Text (ARC & Awaken...) ---
+            // We use CSS 3D transforms. Max rotation is 15 degrees.
+            const rotX = -targetY * 15; 
+            const rotY = targetX * 15;
+            headerElement.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-            // Render 3D Scene
+            // Render
             renderer.render(scene, camera);
         }
 
@@ -425,4 +403,3 @@
     </script>
 </body>
 </html>
-
