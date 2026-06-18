@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARC | Awaken. Rise. Conquer.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <title>ARC | The Paradigm Shift</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Old Money / Royal Color Palette */
-            --bg-base: #6B4226;          /* Deep rich brown base */
-            --bg-accent: #014225;        /* British Racing Green */
-            --gold-light: #F9E596;       /* Bright Gold */
-            --gold-core: #D4AF37;        /* Pure Gold */
-            --silver: #C0C0C0;           /* Elegant Silver */
-            --text-light: #FDFBF7;       /* Off-white for readability */
-            --cyan-accent: #008B8B;      /* Dark Cyan for subtle contrast */
+            /* Core Theme */
+            --bg-primary: #6B4226;       /* The requested deep brown */
+            --bg-secondary: #014225;     /* British Racing Green */
+            
+            /* Accents */
+            --gold-solid: #D4AF37;       /* Solid Gold for the pyramid/buttons */
+            --gold-highlight: #F9E596;
+            --silver-accent: #C0C0C0;
+            --cyan-accent: #008B8B;      /* Used sparingly for impact */
+            
+            /* Text */
+            --text-main: #FDFBF7;        /* Off-white */
+            --text-muted: #BDBDBD;
         }
 
         body, html {
@@ -23,9 +28,10 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-accent) 100%);
+            /* Subtle gradient mixing the brown and green */
+            background: linear-gradient(145deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
             font-family: 'Lora', serif;
-            color: var(--text-light);
+            color: var(--text-main);
             overflow-x: hidden;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -33,293 +39,302 @@
             user-select: none;
         }
 
-        /* 3D Canvas Background */
-        #webgl-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none; /* Let clicks pass through to UI */
-        }
-
-        /* Subtle Vignette Overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* =========================================
+           TOP SECTION: 3D Canvas & Interactive Text
+           ========================================= */
+        #top-interactive-section {
             width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 30%, rgba(10, 8, 6, 0.85) 100%);
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* Main Content Container */
-        #content-layer {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            min-height: 100vh;
+            min-height: 100vh; /* Takes up full first screen */
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
-            /* Setup for 3D perspective on the text */
-            perspective: 1000px; 
+            justify-content: flex-start;
+            perspective: 1200px; /* Crucial for CSS 3D */
+            position: relative;
         }
 
-        /* Container specifically for the 3D text elements */
+        /* The 3D Pyramid Canvas */
+        #canvas-container {
+            width: 100%;
+            height: 50vh; /* Takes up top half of the screen */
+            position: relative;
+            z-index: 10;
+        }
+
+        /* The Interactive Header Text */
         #interactive-header {
             text-align: center;
-            margin-top: 30vh; /* Push down to leave space for the 3D pyramid */
-            margin-bottom: 60px;
+            margin-top: -20px; /* Pull it slightly into the canvas area */
+            z-index: 20;
             transform-style: preserve-3d;
-            /* Smooth transition when mouse leaves */
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .title-arc {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(5rem, 12vw, 9rem);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(5rem, 15vw, 10rem);
             font-weight: 900;
             line-height: 0.9;
             margin: 0;
-            /* Gold Gradient Text */
-            background: linear-gradient(to bottom, var(--gold-light) 0%, var(--gold-core) 100%);
+            /* Solid Gold Text */
+            background: linear-gradient(to bottom, var(--gold-highlight) 0%, var(--gold-solid) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0px 15px 30px rgba(0,0,0,0.6);
-            letter-spacing: 0.05em;
-            transform: translateZ(80px); /* Pop out more */
+            text-shadow: 0px 15px 30px rgba(0,0,0,0.8);
+            letter-spacing: 0.1em;
+            transform: translateZ(80px); /* Pops out */
         }
 
         .subtitle {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(1rem, 3vw, 1.8rem);
             font-weight: 700;
-            color: var(--silver);
+            color: var(--silver-accent);
             letter-spacing: 0.5em;
             margin-top: 15px;
             text-transform: uppercase;
-            text-shadow: 0px 5px 15px rgba(0,0,0,0.8);
-            transform: translateZ(40px); /* Pop out slightly less */
+            text-shadow: 0px 5px 15px rgba(0,0,0,0.9);
+            transform: translateZ(40px); /* Pops out slightly less */
         }
 
-        /* Content Section - Static */
+        /* =========================================
+           BOTTOM SECTION: Static Content
+           ========================================= */
+        #static-content-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 80px 20px;
+            background: rgba(0, 0, 0, 0.4); /* Darkens the background for readability */
+            box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 30;
+        }
+
         .content-wrapper {
-            max-width: 700px;
+            max-width: 800px;
             text-align: center;
-            margin-top: 40px;
-            padding: 40px;
-            background: rgba(30, 22, 17, 0.7);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border-radius: 4px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            width: 100%;
         }
 
-        .section-heading {
-            font-family: 'Cinzel', serif;
-            color: var(--gold-core);
-            font-size: 2rem;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
+        .hook-text {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            color: var(--liquidGold);
+            margin-bottom: 30px;
+            line-height: 1.2;
             text-transform: uppercase;
         }
 
-        .punchy-text {
+        .pitch-text {
             font-size: 1.2rem;
             line-height: 1.8;
+            color: var(--text-main);
             margin-bottom: 25px;
-            color: var(--text-light);
+            text-align: justify;
         }
 
-        .punchy-text strong {
-            color: var(--liquidGold);
-            font-weight: 600;
-            font-family: 'Cinzel', serif;
-            letter-spacing: 1px;
+        .highlight-gold { color: var(--gold-solid); font-weight: 600; }
+        .highlight-cyan { color: var(--cyan-accent); font-weight: 600; }
+
+        /* The Ledger Section */
+        .ledger-box {
+            margin: 50px 0;
+            padding: 30px;
+            border-top: 1px solid rgba(192, 192, 192, 0.3);
+            border-bottom: 1px solid rgba(192, 192, 192, 0.3);
+            background: rgba(255,255,255,0.02);
         }
 
-        /* The Ledger Link */
         .ledger-link {
-            display: inline-block;
-            margin-top: 30px;
-            margin-bottom: 40px;
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            color: var(--cyan-accent);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.4rem;
+            color: var(--silver-accent);
             text-decoration: none;
             letter-spacing: 2px;
-            border-bottom: 1px solid var(--cyan-accent);
-            padding-bottom: 5px;
             transition: all 0.3s ease;
         }
-
+        
         .ledger-link:hover {
-            color: var(--silver);
-            border-bottom-color: var(--silver);
-            text-shadow: 0 0 15px rgba(192, 192, 192, 0.5);
+            color: var(--text-main);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
-        /* Action Button */
-        .btn-gold {
-            display: inline-block;
-            background: linear-gradient(to bottom, #d4af37 0%, #8c6d23 100%);
-            color: #0a0806;
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .btn-primary, .btn-secondary {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 300px;
+            padding: 20px;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
             font-weight: 900;
-            padding: 20px 60px;
-            border: 1px solid #f9e596;
-            border-radius: 2px;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.4);
-            transition: all 0.2s ease;
             text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 2px;
         }
 
-        .btn-gold:hover {
-            background: linear-gradient(to bottom, #f9e596 0%, #d4af37 100%);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.6);
-            transform: translateY(-2px);
+        /* Whop / Join Button */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-highlight) 0%, var(--gold-solid) 50%, #aa771c 100%);
+            color: #0a0806;
+            border: 1px solid #fff;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.5);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6), inset 0 2px 0 rgba(255,255,255,0.8);
+            transform: translateY(-3px);
+        }
+
+        /* Dashboard Button */
+        .btn-secondary {
+            background: transparent;
+            color: var(--silver-accent);
+            border: 1px solid var(--silver-accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(192, 192, 192, 0.1);
+            color: var(--text-main);
+            border-color: var(--text-main);
+        }
+
+        @media (min-width: 768px) {
+            .btn-container {
+                flex-direction: row;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div id="webgl-container"></div>
-    <div class="overlay"></div>
+    <section id="top-interactive-section">
+        <div id="canvas-container"></div>
 
-    <div id="content-layer">
-        
         <div id="interactive-header">
             <h1 class="title-arc">ARC</h1>
-            <div class="subtitle">Awaken • Rise • Conquer</div>
+            <div class="subtitle">AWAKEN • RISE • CONQUER</div>
         </div>
+    </section>
 
+    <section id="static-content-section">
         <div class="content-wrapper">
-            <h2 class="section-heading">The Elite Blueprint</h2>
             
-            <p class="punchy-text">
-                The world operates on systems designed to keep you ordinary. <strong>We provide the exit.</strong>
+            <h2 class="hook-text">The Architecture of Absolute Leverage.</h2>
+            
+            <p class="pitch-text">
+                You have been taught to trade your time for depreciating currency. You have been told to work quietly and wait. That is not a strategy; that is <span class="highlight-cyan">compliance.</span>
             </p>
             
-            <p class="punchy-text">
-                Within ARC, you will gain access to <strong>FOUR highly-guarded, asymmetric business models.</strong> These are not trendy gimmicks. They are the exact, scalable frameworks utilized by the elite to generate exponential wealth, regardless of the global economy. 
-            </p>
-            
-            <p class="punchy-text">
-                We do not reveal the methods to the public. <strong>True edge requires confidentiality.</strong> 
+            <p class="pitch-text">
+                Welcome to ARC. We do not sell motivation. We engineer <span class="highlight-gold">Sovereignty</span>. Inside this vault, you will be granted access to exactly <strong>4 Proprietary Business Frameworks</strong>. We do not disclose them here. When everyone knows the play, the edge evaporates. 
             </p>
 
-            <p class="punchy-text" style="border-left: 3px solid var(--gold-core); padding-left: 15px; margin-top: 30px;">
-                <strong>The Timeline:</strong><br>
-                Days 1-30: Complete Cognitive Rewiring.<br>
-                Days 30-90: System Deployment & Market Testing.<br>
-                Days 90+: Autonomy, Scale, and Wealth Preservation.
+            <p class="pitch-text" style="border-left: 2px solid var(--gold-solid); padding-left: 20px; margin: 40px 0;">
+                <span class="highlight-gold" style="font-size: 1.3rem;">THE TIMELINE:</span><br><br>
+                <strong>PHASE I (Days 1-30):</strong> Eradication of limiting programming. Selection of your primary wealth vehicle.<br><br>
+                <strong>PHASE II (Days 30-90):</strong> Ruthless deployment. Market testing. Securing initial cash flow.<br><br>
+                <strong>PHASE III (Days 90+):</strong> Automation, scale, and the transition from operator to Owner.
             </p>
 
-            <p class="punchy-text">
-                The result? Total financial sovereignty. You become the architect of your reality.
+            <p class="pitch-text">
+                This is not for the hesitant. If you require absolute certainty before taking action, the Matrix is where you belong. If you demand exponential returns, you belong here.
             </p>
+
+            <div class="ledger-box">
+                <a href="#ledger" class="ledger-link">VERIFY THE DATA: VIEW THE ARC LEDGER</a>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-muted);">Indisputable proof of member acquisitions.</p>
+            </div>
+
+            <div class="btn-container">
+                <a href="#whop-checkout" class="btn-primary">INITIATE TRANSFER</a>
+                <a href="#dashboard" class="btn-secondary">MEMBER DASHBOARD</a>
+            </div>
+
         </div>
-
-        <a href="#ledger" class="ledger-link">VERIFY THE RESULTS: THE ARC LEDGER</a>
-
-        <a href="#checkout" class="btn-gold">Gain Access</a>
-
-    </div>
+    </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
         /**
-         * 1. THREE.JS 3D BACKGROUND SETUP
+         * 1. SCENE SETUP (Confined to the top container)
          */
-        const container = document.getElementById('webgl-container');
+        const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         
-        // Setup Camera
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 25; // Pull back to see the pyramid
-
-        // Setup Renderer
+        // Match the background to the CSS gradient to make it blend seamlessly
+        // We use alpha: true so the CSS background shows through
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // Fit renderer to the container's dimensions, not the whole window
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        renderer.setSize(width, height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        /**
-         * 2. CREATING THE 3D OBJECTS
-         */
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+        camera.position.z = 15;
 
-        // A. The Solid Gold Pyramid
-        // ConeGeometry(radius, height, radialSegments) - 4 segments makes it a square pyramid
-        const pyramidGeo = new THREE.ConeGeometry(5, 7, 4);
+        /**
+         * 2. THE SOLID GOLD PYRAMID
+         */
+        // Radius, Height, RadialSegments (4 = square base)
+        const pyramidGeo = new THREE.ConeGeometry(4, 5, 4);
         
-        // High-quality gold material
+        // High-end gold material
         const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xD4AF37,       // Base Gold
-            emissive: 0x2a1b00,    // Slight dark glow
-            roughness: 0.2,        // Very shiny
-            metalness: 1.0,        // Fully metallic
-            flatShading: true      // Gives it clean, sharp edges
+            color: 0xD4AF37,       // Solid Gold base
+            emissive: 0x3a2500,    // Warm, dark inner glow
+            roughness: 0.15,       // Very shiny
+            metalness: 1.0,        // Pure metal
+            flatShading: true      // Crisp edges
         });
 
         const pyramid = new THREE.Mesh(pyramidGeo, goldMaterial);
         
-        // Position it high up, behind where the ARC text will be
-        pyramid.position.set(0, 7, -5); 
-        // Rotate so a flat face is pointing somewhat forward, but looks dynamic
+        // Rotate it so a flat face is pointing towards us, tipped slightly forward
         pyramid.rotation.y = Math.PI / 4; 
+        pyramid.rotation.x = 0.2;
         scene.add(pyramid);
 
-        // B. Background Floating Objects (Small silver/cyan diamonds to add depth)
-        const particles = new THREE.Group();
-        const particleGeo = new THREE.OctahedronGeometry(0.2, 0); // Diamond shape
-        
-        const silverMat = new THREE.MeshStandardMaterial({ color: 0xE5E4E2, metalness: 0.8, roughness: 0.2 });
-        const cyanMat = new THREE.MeshStandardMaterial({ color: 0x00E5FF, metalness: 0.5, roughness: 0.5, emissive: 0x004455 });
-
-        for(let i = 0; i < 150; i++) {
-            // Alternate materials
-            const mat = Math.random() > 0.5 ? silverMat : cyanMat;
-            const mesh = new THREE.Mesh(particleGeo, mat);
-            
-            // Random positions in a wide area behind the pyramid
-            mesh.position.x = (Math.random() - 0.5) * 60;
-            mesh.position.y = (Math.random() - 0.5) * 60;
-            mesh.position.z = (Math.random() - 0.5) * 40 - 10; // Keep them behind the text
-            
-            // Random rotation
-            mesh.rotation.x = Math.random() * Math.PI;
-            mesh.rotation.y = Math.random() * Math.PI;
-            
-            particles.add(mesh);
-        }
-        scene.add(particles);
-
         /**
-         * 3. LIGHTING (Crucial for the Gold effect)
+         * 3. LIGHTING (Crucial to make it look like real gold)
          */
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Soft base light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); 
         scene.add(ambientLight);
 
-        // Main bright light hitting the pyramid
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-        dirLight.position.set(10, 20, 15);
-        scene.add(dirLight);
+        // Key light (Bright white/gold from top right)
+        const keyLight = new THREE.DirectionalLight(0xfff5e6, 2.5);
+        keyLight.position.set(10, 20, 10);
+        scene.add(keyLight);
 
-        // A colored fill light to add richness (British Racing Green tint)
-        const fillLight = new THREE.DirectionalLight(0x014225, 2);
-        fillLight.position.set(-15, -10, 5);
+        // Fill light (British Racing Green tint from bottom left)
+        const fillLight = new THREE.DirectionalLight(0x014225, 3.0);
+        fillLight.position.set(-10, -10, 10);
         scene.add(fillLight);
+        
+        // Rim light (Cyan tint from behind)
+        const rimLight = new THREE.PointLight(0x00E5FF, 2, 50);
+        rimLight.position.set(0, 5, -10);
+        scene.add(rimLight);
 
         /**
          * 4. MOUSE/TOUCH TRACKING
@@ -329,8 +344,9 @@
         let targetX = 0;
         let targetY = 0;
         
-        const windowHalfX = window.innerWidth / 2;
-        const windowHalfY = window.innerHeight / 2;
+        // Calculate center based on the whole window
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
 
         document.addEventListener('mousemove', (event) => {
             // Normalized values between -1 and 1
@@ -367,23 +383,18 @@
             targetY += (mouseY - targetY) * 0.05;
 
             // --- Animate 3D Pyramid ---
-            // Constant slow spin
-            pyramid.rotation.y += 0.005; 
-            // React to mouse: tilt and turn
-            pyramid.rotation.x = targetY * 0.5; // Look up/down
-            pyramid.position.x = targetX * 3;   // Move left/right slightly
-            // Slight floating effect
-            pyramid.position.y = 7 + Math.sin(time * 1.5) * 0.3;
-
-            // --- Animate Background Particles ---
-            particles.rotation.y = time * 0.03;
-            // Particles react opposite to pyramid for depth
-            particles.position.x = -targetX * 2;
-            particles.position.y = targetY * 2;
+            // Constant slow spin on Y axis
+            pyramid.rotation.y = (time * 0.3) + (targetX * 0.5); 
+            
+            // React to mouse: tilt up/down
+            pyramid.rotation.x = 0.2 + (targetY * 0.5); 
+            
+            // Subtle levitation
+            pyramid.position.y = Math.sin(time * 2) * 0.2;
 
             // --- Animate HTML Text (ARC & Awaken...) ---
-            // We use CSS 3D transforms. Max rotation is 15 degrees.
-            const rotX = -targetY * 15; 
+            // Only the headerElement tilts. The static content stays still.
+            const rotX = -targetY * 15; // Max 15 degrees tilt
             const rotY = targetX * 15;
             headerElement.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
@@ -395,9 +406,15 @@
 
         // Handle Window Resize
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+            
+            const newWidth = container.clientWidth;
+            const newHeight = container.clientHeight;
+            
+            camera.aspect = newWidth / newHeight;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(newWidth, newHeight);
         });
 
     </script>
