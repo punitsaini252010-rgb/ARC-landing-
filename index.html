@@ -4,28 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ARC | The Absolute Standard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
-        /* === THEME VARIABLES === */
         :root {
-            --brown-bg: #1a0f0a; /* Deep, rich espresso brown */
-            --brown-panel: #26160f; /* Slightly lighter brown for cards */
-            --gold-pure: #D4AF37; /* Pure solid gold */
-            --gold-hover: #F9E596;
-            --text-light: #FDFBF7;
-            --text-muted: #A39182; /* Muted tan for secondary text */
+            /* Deep, Royal Brown Palette */
+            --bg-deep: #140d0a;       /* Almost black brown */
+            --bg-medium: #2a1e17;     /* Rich espresso */
+            --gold-light: #F4D068;    /* Lighter gold for highlights */
+            --gold-primary: #C5A059;  /* Noble, muted gold */
+            --gold-dark: #8B6B32;     /* Deep antique gold */
+            
+            /* Text Colors */
+            --text-pure: #FFFFFF;
+            --text-offwhite: #E6E2DD; /* Warmer, softer white for readability */
+            --text-muted: #A8A096;
         }
 
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
-            background-color: var(--brown-bg);
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-light);
+            min-height: 100vh;
+            background: radial-gradient(circle at center, var(--bg-medium) 0%, var(--bg-deep) 100%);
+            font-family: 'Lato', sans-serif;
+            color: var(--text-offwhite);
             overflow-x: hidden;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -33,257 +37,290 @@
             user-select: none;
         }
 
-        /* === 3D CANVAS === */
-        #webgl-container {
+        /* 3D Canvas - Sent to the Background */
+        #webgl-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
             z-index: 0;
-            pointer-events: none; /* Crucial: lets you click the buttons below */
+            pointer-events: none; /* Let clicks pass through to UI */
         }
 
-        /* === MAIN CONTENT WRAPPER === */
+        /* Overlay to ensure text readability over the 3D background */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 13, 10, 0.65); /* Dark brown tint */
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Main Content Container - Static */
         #content-layer {
             position: relative;
             z-index: 10;
             width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
-            perspective: 1500px; /* 3D effect for scrolling/mouse movement */
+            padding: 8vh 20px 100px 20px;
         }
 
-        /* === HEADER / TITLE === */
-        .header-container {
+        /* HEADER */
+        .header-section {
             text-align: center;
-            margin-top: 10vh;
-            margin-bottom: 80px;
-            transform-style: preserve-3d;
-            transition: transform 0.2s ease-out;
+            margin-bottom: 50px;
+            width: 100%;
         }
 
         .title-arc {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(6rem, 15vw, 12rem);
-            font-weight: 900;
-            line-height: 0.9;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 700;
             margin: 0;
-            color: var(--gold-pure);
-            text-shadow: 0px 10px 30px rgba(0,0,0,0.9);
+            line-height: 1;
+            background: linear-gradient(to bottom, var(--gold-light) 0%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 4px 20px rgba(197, 160, 89, 0.2);
             letter-spacing: 0.05em;
         }
 
         .subtitle {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 0.6em;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 400;
+            color: var(--gold-primary);
+            letter-spacing: 0.4em;
             margin-top: 10px;
             text-transform: uppercase;
         }
 
-        /* === PROOF / DASHBOARD LINK === */
-        .proof-container {
-            margin-bottom: 60px;
+        /* DASHBOARD LINK (Top) */
+        .dashboard-container {
             text-align: center;
-            transform: translateZ(30px);
-        }
-
-        .proof-text {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .dashboard-link {
-            display: inline-block;
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: var(--text-light);
-            text-decoration: none;
-            border-bottom: 1px solid var(--gold-pure);
-            padding-bottom: 5px;
-            transition: all 0.3s ease;
-            text-shadow: 0px 0px 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .dashboard-link:hover {
-            color: var(--gold-hover);
-            border-bottom-color: var(--gold-hover);
-            text-shadow: 0px 0px 25px rgba(249, 229, 150, 0.8);
-        }
-
-        /* === COPYWRITING PANELS === */
-        .manifesto-container {
-            max-width: 800px;
+            margin-bottom: 60px;
+            padding: 20px;
+            border-top: 1px solid rgba(197, 160, 89, 0.2);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
             width: 100%;
-            background: rgba(38, 22, 15, 0.85); /* Dark brown glass effect */
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            padding: 50px;
-            margin-bottom: 40px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
-            transform-style: preserve-3d;
-            transition: transform 0.2s ease-out;
+            background: rgba(42, 30, 23, 0.4);
         }
 
-        .headline {
-            font-family: 'Cinzel', serif;
-            font-size: 2.2rem;
-            color: var(--gold-pure);
-            margin-bottom: 25px;
+        .dashboard-text {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
             letter-spacing: 1px;
             text-transform: uppercase;
+        }
+
+        .btn-dashboard {
+            display: inline-block;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--gold-primary);
+            padding-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-dashboard:hover {
+            color: var(--gold-light);
+            border-bottom-color: var(--gold-light);
+            text-shadow: 0 0 10px rgba(244, 208, 104, 0.3);
+        }
+
+        /* COPYWRITING SECTION */
+        .copy-section {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 60px;
+        }
+
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--text-pure);
+            margin-bottom: 25px;
+            border-left: 4px solid var(--gold-primary);
+            padding-left: 15px;
+            line-height: 1.2;
         }
 
         .copy-text {
             font-size: 1.15rem;
-            line-height: 1.9;
-            color: var(--text-muted);
-            margin-bottom: 25px;
+            line-height: 1.8;
+            color: var(--text-offwhite);
+            margin-bottom: 20px;
+            font-weight: 300;
         }
 
         .copy-text strong {
-            color: var(--text-light);
-            font-weight: 600;
+            color: var(--gold-primary);
+            font-weight: 700;
         }
 
-        .highlight-gold {
-            color: var(--gold-pure);
-            font-weight: bold;
+        .quote-block {
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 2px solid var(--gold-dark);
+            margin: 30px 0;
+            font-style: italic;
+            font-size: 1.25rem;
+            color: var(--text-muted);
         }
 
-        /* === BUTTONS === */
-        .action-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 40px;
-            margin-bottom: 100px;
-            align-items: center;
+        /* JOIN BUTTON (Bottom) */
+        .join-container {
+            text-align: center;
+            width: 100%;
+            margin-top: 20px;
         }
 
-        .btn-gold {
+        .btn-join {
             display: inline-block;
-            background-color: var(--gold-pure);
+            background: linear-gradient(to bottom, var(--gold-primary) 0%, var(--gold-dark) 100%);
             color: #000;
-            font-family: 'Cinzel', serif;
-            font-size: 1.3rem;
-            font-weight: 900;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
             padding: 20px 60px;
-            border: none;
+            border: 1px solid var(--gold-light);
             text-transform: uppercase;
             letter-spacing: 3px;
             cursor: pointer;
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
-            transition: all 0.3s ease;
             text-decoration: none;
-            width: 300px;
-            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .btn-gold:hover {
-            background-color: var(--gold-hover);
-            box-shadow: 0 15px 50px rgba(249, 229, 150, 0.4);
-            transform: translateY(-3px);
+        .btn-join:hover {
+            background: linear-gradient(to bottom, var(--gold-light) 0%, var(--gold-primary) 100%);
+            box-shadow: 0 15px 40px rgba(197, 160, 89, 0.4);
+            transform: translateY(-2px);
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--brown-bg); }
-        ::-webkit-scrollbar-thumb { background: var(--gold-pure); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
 
         @media (max-width: 768px) {
-            .manifesto-container { padding: 30px 20px; }
-            .headline { font-size: 1.8rem; }
-            .copy-text { font-size: 1rem; }
+            .section-heading { font-size: 1.8rem; }
+            .copy-text { font-size: 1.05rem; }
+            .btn-join { padding: 18px 40px; font-size: 1.2rem; width: 100%; box-sizing: border-box;}
         }
     </style>
 </head>
 <body>
 
-    <div id="webgl-container"></div>
+    <div id="webgl-background"></div>
+    <div class="bg-overlay"></div>
 
     <div id="content-layer">
         
-        <div class="header-container" id="tilt-header">
+        <div class="header-section">
             <h1 class="title-arc">ARC</h1>
             <div class="subtitle">Awaken • Rise • Conquer</div>
         </div>
 
-        <div class="proof-container" id="tilt-proof">
-            <div class="proof-text">See what the members are making right now.</div>
-            <a href="#dashboard" class="dashboard-link">View The ARC Dashboard</a>
+        <div class="dashboard-container">
+            <div class="dashboard-text">Verify The Results</div>
+            <a href="#dashboard-link" class="btn-dashboard">ENTER THE ARC DASHBOARD</a>
         </div>
 
-        <div class="manifesto-container" id="tilt-box1">
-            <h2 class="headline">The System is Flawed. You Are Not.</h2>
+        <div class="copy-section">
+            <h2 class="section-heading">The Architecture of Independence</h2>
             <p class="copy-text">
-                Every metric of success you have been taught is designed to keep you trapped in a cycle of dependency. They want you trading your irreplaceable time for a depreciating asset. <strong>We do not accept this reality.</strong>
+                Wealth is not a byproduct of hard work; it is the result of <strong>superior positioning</strong>. The conventional trajectory—trade your time for a depreciating currency, minimize risk, and wait for retirement—is a mathematical trap designed to sustain the system, not to liberate you.
             </p>
             <p class="copy-text">
-                The shift requires absolute focus. It requires breaking the conditioning that has tethered you to mediocrity. We provide the architecture for your escape. No motivation. No theory. Only execution.
+                ARC was founded on a singular premise: to deconstruct the methodologies of the elite and provide a structured, actionable framework for financial sovereignty.
+            </p>
+
+            <div class="quote-block">
+                We do not deal in motivation. We deal in mechanics. The infrastructure of success is systematic, predictable, and entirely accessible to those who understand the rules of the game.
+            </div>
+
+            <h2 class="section-heading">The 30 Protocols</h2>
+            <p class="copy-text">
+                Inside ARC, we have engineered a curriculum comprising <strong>30 distinct, highly-effective business models.</strong> These are not theoretical concepts; they are the exact mechanisms currently driving significant revenue in the modern economy.
+            </p>
+            <p class="copy-text">
+                However, to protect the integrity of these models and maintain the competitive edge of our members, <strong>these protocols remain strictly confidential.</strong> You will not find them listed on a public page. When a strategy becomes common knowledge, its value drops to zero.
+            </p>
+            <p class="copy-text">
+                Furthermore, access to these models is <strong>merit-based</strong>. You do not get the entire playbook on day one. As you execute the foundational frameworks, demonstrate competence, and achieve verifiable results, higher-tier systems will be unlocked for your deployment.
+            </p>
+
+            <h2 class="section-heading">The Transformation Timeline</h2>
+            <p class="copy-text">
+                We demand commitment, and we guarantee structure. The process is absolute:
+            </p>
+            <p class="copy-text">
+                <strong>Phase I: Reprogramming (Days 1-30).</strong> We eliminate the consumer mindset and install the analytical framework required for wealth generation. You will select your initial vehicle and establish your baseline operations.
+            </p>
+            <p class="copy-text">
+                <strong>Phase II: Execution (Days 30-90).</strong> Ruthless, metrics-driven implementation. You will test the market, optimize your approach, and secure your first reliable streams of revenue.
+            </p>
+            <p class="copy-text">
+                <strong>Phase III: Sovereignty (Days 90+).</strong> The transition from operator to owner. We focus on scaling your systems, automating processes, and protecting your assets.
             </p>
         </div>
 
-        <div class="manifesto-container" id="tilt-box2">
-            <h2 class="headline">30 Classified Business Models</h2>
-            <p class="copy-text">
-                Inside ARC, you will find <strong>30 distinct, highly guarded avenues of wealth generation.</strong> We do not broadcast these methods to the public, because edge is destroyed by exposure.
-            </p>
-            <p class="copy-text">
-                You will not be granted access to all 30 immediately. <strong>You must earn them.</strong> 
-            </p>
-            <p class="copy-text">
-                As you prove your competence, execute the foundational frameworks, and generate verifiable revenue, higher-tier models will unlock for you. You are evaluated on performance, not promises.
-            </p>
-        </div>
-
-        <div class="action-container">
-            <a href="#join-arc" class="btn-gold">Join ARC</a>
+        <div class="join-container">
+            <a href="#whop-checkout" class="btn-join">JOIN ARC</a>
         </div>
 
     </div>
 
     <script>
-        const container = document.getElementById('webgl-container');
+        const container = document.getElementById('webgl-background');
         const scene = new THREE.Scene();
         
+        // Camera setup
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 25;
+        camera.position.z = 15;
 
+        // Renderer setup
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
-        // 1. PURE GOLD PYRAMID (No reflections)
-        // We use MeshBasicMaterial because it ignores lights and environmental reflections.
-        // It provides a flat, solid, unshaded color.
+        // CREATE THE GOLD PYRAMID
+        // 4 radial segments = square base
         const pyramidGeo = new THREE.ConeGeometry(5, 7, 4);
+        
+        // Pure Gold Material - No environmental reflections, just solid color
         const goldMaterial = new THREE.MeshBasicMaterial({
-            color: 0xD4AF37, // Pure Gold Hex
-            wireframe: false // Set to true if you want a gold wireframe instead of solid
+            color: 0xC5A059, // Matches the --gold-primary CSS variable
         });
 
-        // Add a subtle black wireframe outline to make the 3D shape pop against the dark background
+        // Add a subtle black outline to give it definition
         const edges = new THREE.EdgesGeometry(pyramidGeo);
         const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
         const outline = new THREE.LineSegments(edges, lineMaterial);
 
         const pyramid = new THREE.Mesh(pyramidGeo, goldMaterial);
-        pyramid.add(outline); // Attach outline to the pyramid
-
-        // Position it near the top behind the text
-        pyramid.position.set(0, 10, -5); 
-        pyramid.rotation.y = Math.PI / 4; 
+        pyramid.add(outline);
+        
+        // Position it in the background
+        pyramid.position.set(0, 0, 0); 
         scene.add(pyramid);
 
-        // 2. MOUSE TRACKING & 3D TILT
+        // MOUSE TRACKING FOR PYRAMID MOVEMENT
         let mouseX = 0;
         let mouseY = 0;
         let targetX = 0;
@@ -292,55 +329,50 @@
         const windowHalfX = window.innerWidth / 2;
         const windowHalfY = window.innerHeight / 2;
 
-        const header = document.getElementById('tilt-header');
-        const proof = document.getElementById('tilt-proof');
-        const box1 = document.getElementById('tilt-box1');
-        const box2 = document.getElementById('tilt-box2');
-
         document.addEventListener('mousemove', (event) => {
+            // Normalized values between -1 and 1
             mouseX = (event.clientX - windowHalfX) / windowHalfX;
             mouseY = (event.clientY - windowHalfY) / windowHalfY;
         });
 
-        // Reset on leave
+        document.addEventListener('touchmove', (event) => {
+            if(event.touches.length > 0) {
+                mouseX = (event.touches[0].clientX - windowHalfX) / windowHalfX;
+                mouseY = (event.touches[0].clientY - windowHalfY) / windowHalfY;
+            }
+        });
+
+        // Reset tracking when mouse leaves window
         document.addEventListener('mouseleave', () => {
             mouseX = 0;
             mouseY = 0;
-            header.style.transform = `rotateX(0deg) rotateY(0deg)`;
-            proof.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(30px)`;
-            box1.style.transform = `rotateX(0deg) rotateY(0deg)`;
-            box2.style.transform = `rotateX(0deg) rotateY(0deg)`;
         });
 
+        // ANIMATION LOOP
         const clock = new THREE.Clock();
 
         function animate() {
             requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
 
+            // Smooth interpolation for mouse movement
             targetX += (mouseX - targetX) * 0.05;
             targetY += (mouseY - targetY) * 0.05;
 
             // Animate 3D Pyramid
-            pyramid.rotation.y += 0.01; // Constant spin
-            pyramid.rotation.x = targetY * 0.8; // React to mouse Y
-            pyramid.position.x = targetX * 4;   // Move left/right with mouse
-            pyramid.position.y = 9 + (targetY * 2); // Move up/down with mouse
-
-            // Animate HTML UI (CSS 3D Tilt)
-            const rotX = -targetY * 10; 
-            const rotY = targetX * 10;
+            pyramid.rotation.y = time * 0.2 + (targetX * 0.5); // Slow spin + mouse interaction
+            pyramid.rotation.x = 0.3 + (targetY * 0.3); // Slight tilt + mouse interaction
             
-            header.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(50px)`;
-            proof.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(40px)`;
-            box1.style.transform = `rotateX(${rotX * 0.5}deg) rotateY(${rotY * 0.5}deg) translateZ(20px)`;
-            box2.style.transform = `rotateX(${rotX * 0.5}deg) rotateY(${rotY * 0.5}deg) translateZ(20px)`;
+            // Move the pyramid slightly in the background based on mouse
+            pyramid.position.x = targetX * 2;
+            pyramid.position.y = -targetY * 2;
 
             renderer.render(scene, camera);
         }
 
         animate();
 
+        // Handle Window Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
