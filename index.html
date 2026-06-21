@@ -6,21 +6,24 @@
     <title>ARC | The Absolute Standard</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         :root {
-            /* EXACT COLORS PULLED FROM THE ARC LOGO */
-            --arc-brown-dark: #24140c;   /* Deepest shadow in logo */
-            --arc-brown-base: #3a2618;   /* Main background of logo */
-            --arc-brown-light: #5c3c24;  /* Highlight brown */
+            /* Color Palette based on provided image */
+            --bg-deep-green: #0a1411; /* Very dark green, almost black */
+            --bg-mid-green: #112920;  /* The rich green from the image */
             
-            --arc-gold-dark: #b8860b;    /* Darker gold tones */
-            --arc-gold-base: #d4af37;    /* Main gold */
-            --arc-gold-light: #f9e596;   /* Bright gold highlight */
+            /* Liquid Gold for Headings/Highlights */
+            --gold-light: #F9E596;
+            --gold-core: #D4AF37;
+            --gold-dark: #8C6D23;
             
-            --text-main: #f0f0f0;        /* Soft white for readability */
-            --text-muted: #b0a8a0;       /* Muted grey-brown */
+            /* Liquid Silver for Body Text */
+            --silver-light: #F5F5F5;
+            --silver-core: #D1D1D1;
+            --silver-dark: #A9A9A9;
+
+            --pure-black: #000000;
         }
 
         * {
@@ -32,10 +35,10 @@
         body, html {
             width: 100%;
             height: 100%;
-            /* Premium gradient background based on logo colors */
-            background: radial-gradient(circle at center, var(--arc-brown-light) 0%, var(--arc-brown-base) 40%, var(--arc-brown-dark) 100%);
+            /* Vignette background */
+            background: radial-gradient(circle at center, var(--bg-mid-green) 0%, var(--bg-deep-green) 100%);
             font-family: 'Montserrat', sans-serif;
-            color: var(--text-main);
+            color: var(--silver-core);
             overflow-x: hidden;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -43,152 +46,139 @@
             user-select: none;
         }
 
-        /* 3D Canvas - Sent to the Background */
-        #webgl-background {
+        /* 3D Canvas Background */
+        #webgl-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 0;
-            pointer-events: none;
+            z-index: -1; /* Behind everything */
+            pointer-events: none; 
         }
 
-        /* Overlay to ensure text readability over the 3D background */
-        .bg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(36, 20, 12, 0.75); /* Dark brown tint, semi-transparent */
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* Main Content Container - Static */
+        /* Main Content Container - 3D Perspective Enabled */
         #content-layer {
             position: relative;
             z-index: 10;
             width: 100%;
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 5vh 20px 100px 20px;
+            padding: 20px 20px 100px 20px;
+            perspective: 1200px; 
         }
 
-        /* HEADER */
-        .header-section {
+        /* 3D Reactive Wrapper for Text */
+        #interactive-header {
             text-align: center;
+            margin-top: 5vh;
             margin-bottom: 40px;
-            width: 100%;
-            perspective: 1000px; /* For the 3D text tilt */
-        }
-
-        .title-arc {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(4rem, 15vw, 8rem);
-            font-weight: 900;
-            margin: 0;
-            line-height: 1;
-            /* Gold Gradient Text */
-            background: linear-gradient(to bottom, var(--arc-gold-light) 0%, var(--arc-gold-base) 50%, var(--arc-gold-dark) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0px 10px 30px rgba(212, 175, 55, 0.3);
-            letter-spacing: 0.05em;
             transform-style: preserve-3d;
             transition: transform 0.1s ease-out;
-            display: inline-block; /* Required for transform */
+            width: 100%;
+        }
+
+        /* Typography */
+        .title-arc {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(5rem, 15vw, 10rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin: 0;
+            /* Liquid Gold Effect */
+            background: linear-gradient(to bottom, var(--gold-light) 0%, var(--gold-core) 50%, var(--gold-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 15px 30px rgba(0,0,0,0.8);
+            letter-spacing: 0.1em;
+            transform: translateZ(80px); /* 3D Pop */
         }
 
         .subtitle {
             font-family: 'Cinzel', serif;
-            font-size: clamp(0.9rem, 3vw, 1.4rem);
-            font-weight: 600;
-            color: var(--text-main);
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 700;
+            color: var(--gold-core);
             letter-spacing: 0.5em;
             margin-top: 15px;
             text-transform: uppercase;
-            text-shadow: 0px 4px 10px rgba(0,0,0,0.8);
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-            display: inline-block;
+            text-shadow: 0px 5px 15px rgba(0,0,0,0.9);
+            transform: translateZ(40px);
         }
 
-        /* BUTTONS */
-        .btn-container {
+        /* Buttons */
+        .btn-container-top {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 50px;
+            justify-content: center;
             width: 100%;
-            max-width: 400px;
-            align-items: center;
+            margin-bottom: 60px;
+            transform-style: preserve-3d;
         }
 
         .btn-luxury {
-            display: flex;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            padding: 16px 30px;
+            padding: 18px 40px;
             font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
             text-decoration: none;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border-radius: 2px;
         }
 
+        /* Top Button - Proof */
+        .btn-proof {
+            background: transparent;
+            color: var(--silver-light);
+            border: 1px solid var(--silver-core);
+            transform: translateZ(30px);
+        }
+
+        .btn-proof:hover {
+            background: rgba(209, 209, 209, 0.1);
+            color: #fff;
+            border-color: #fff;
+            transform: translateZ(30px) translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255,255,255,0.1);
+        }
+
+        /* Action Buttons - Gold */
         .btn-gold {
-            background: linear-gradient(135deg, var(--arc-gold-light) 0%, var(--arc-gold-base) 50%, var(--arc-gold-dark) 100%);
-            color: var(--arc-brown-dark);
-            border: 1px solid var(--arc-gold-light);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.5);
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-core) 50%, var(--gold-dark) 100%);
+            color: var(--pure-black);
+            border: 1px solid var(--gold-light);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2), inset 0 2px 0 rgba(255,255,255,0.4);
+            margin-top: 30px;
         }
 
         .btn-gold:hover {
-            background: linear-gradient(135deg, #ffffff 0%, var(--arc-gold-light) 50%, var(--arc-gold-base) 100%);
-            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.8);
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 50%, var(--gold-core) 100%);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4), inset 0 2px 0 rgba(255,255,255,0.6);
+            transform: translateY(-3px);
         }
 
-        .btn-outline {
-            background: transparent;
-            color: var(--arc-gold-base);
-            border: 1px solid var(--arc-gold-base);
-        }
-
-        .btn-outline:hover {
-            background: rgba(212, 175, 55, 0.1);
-            color: var(--arc-gold-light);
-            border-color: var(--arc-gold-light);
-            transform: translateY(-2px);
-        }
-
-        /* TABS INTERFACE */
+        /* Content Sections - Tabs */
         .tabs-container {
             width: 100%;
             max-width: 800px;
-            background: rgba(36, 20, 12, 0.6); /* Very dark brown, semi-transparent */
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 8px;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            overflow: hidden; /* Keep tabs rounded */
+            background: rgba(10, 20, 15, 0.7); /* Dark semi-transparent background */
+            border: 1px solid rgba(212, 175, 55, 0.15); /* Faint gold border */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            margin-bottom: 40px;
         }
 
         .tab-buttons {
             display: flex;
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .tab-btn {
@@ -198,22 +188,22 @@
             padding: 20px 10px;
             font-family: 'Cinzel', serif;
             font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-muted);
+            font-weight: 700;
+            color: var(--silver-dark);
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             transition: all 0.3s ease;
             position: relative;
         }
 
         .tab-btn:hover {
-            color: var(--text-main);
+            color: var(--silver-light);
             background: rgba(212, 175, 55, 0.05);
         }
 
         .tab-btn.active {
-            color: var(--arc-gold-light);
+            color: var(--gold-core);
             background: rgba(212, 175, 55, 0.1);
         }
 
@@ -224,8 +214,8 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: var(--arc-gold-base);
-            box-shadow: 0 0 10px var(--arc-gold-base);
+            background: var(--gold-core);
+            box-shadow: 0 0 10px var(--gold-core);
         }
 
         .tab-content {
@@ -243,213 +233,225 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* CONTENT TYPOGRAPHY */
+        /* Typography within content */
         .section-heading {
             font-family: 'Cinzel', serif;
             font-size: 2rem;
-            color: var(--arc-gold-base);
+            color: var(--gold-core);
             margin-bottom: 20px;
             letter-spacing: 1px;
             text-align: center;
         }
 
         .copy-text {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             line-height: 1.8;
-            color: var(--text-main);
+            color: var(--silver-core);
             margin-bottom: 20px;
             text-align: justify;
         }
 
         .highlight-gold {
-            color: var(--arc-gold-light);
+            color: var(--gold-core);
+            font-weight: 600;
+        }
+        
+        .highlight-silver {
+            color: var(--silver-light);
+            font-weight: 700;
+        }
+
+        .warning-text {
+            color: #d9534f; /* Dark red for pain points */
             font-weight: 600;
         }
 
-        .bottom-cta {
-            margin-top: 40px;
+        .centered-btn-wrapper {
             display: flex;
             justify-content: center;
+            width: 100%;
         }
 
-        /* MEDIA QUERIES */
-        @media (max-width: 768px) {
-            .tab-buttons {
-                flex-direction: column; /* Stack tabs on mobile */
-            }
-            .tab-btn.active::after {
-                width: 4px;
-                height: 100%;
-                top: 0;
-                left: 0;
-            }
-            .tab-content {
-                padding: 30px 20px;
-            }
-            .btn-container {
-                padding: 0 20px;
-            }
+        /* Scroll indicator */
+        .scroll-hint {
+            margin-top: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            color: var(--silver-dark);
+            animation: pulse 2s infinite;
         }
-        @media (min-width: 768px) {
-            .btn-container {
-                flex-direction: row;
-                max-width: 800px;
-            }
-            .btn-luxury {
-                width: auto;
-            }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .tab-buttons { flex-direction: column; }
+            .tab-btn.active::after { width: 4px; height: 100%; top: 0; left: 0; }
+            .tab-content { padding: 30px 20px; }
+            .btn-luxury { width: 100%; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <div id="webgl-background"></div>
-    <div class="bg-overlay"></div>
+    <div id="webgl-container"></div>
 
     <div id="content-layer">
         
-        <div class="header-section" id="tilt-target">
-            <h1 class="title-arc" id="title-text">ARC</h1>
-            <div class="subtitle" id="subtitle-text">Awaken • Rise • Conquer</div>
+        <div class="btn-container-top">
+            <a href="https://arc-calculator.vercel.app/" target="_blank" class="btn-luxury btn-proof">See The Money Made By ARC Members</a>
         </div>
 
-        <div class="btn-container">
-            <a href="#dashboard-link" class="btn-luxury btn-outline">Verify Results: The Ledger</a>
-            <a href="#whop-checkout" class="btn-luxury btn-gold">Enter The Vault</a>
+        <div id="interactive-header">
+            <h1 class="title-arc">ARC</h1>
+            <div class="subtitle">Awaken • Rise • Conquer</div>
+            <div class="scroll-hint">▼ The Blueprint Awaits ▼</div>
+        </div>
+
+        <div class="centered-btn-wrapper">
+             <a href="#join-whop" class="btn-luxury btn-gold" style="margin-bottom: 40px;">Enter The Vault</a>
         </div>
 
         <div class="tabs-container">
             <div class="tab-buttons">
-                <button class="tab-btn active" onclick="openTab(event, 'tab-truth')">The Truth</button>
+                <button class="tab-btn active" onclick="openTab(event, 'tab-truth')">The Reality</button>
                 <button class="tab-btn" onclick="openTab(event, 'tab-arsenal')">The Arsenal</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-timeline')">The Timeline</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-transformation')">The Transformation</button>
             </div>
 
             <div id="tab-truth" class="tab-content active">
-                <h2 class="section-heading">The Illusion of Scarcity</h2>
+                <h2 class="section-heading">Look At Your Bloodline.</h2>
                 <p class="copy-text">
-                    Every metric of success you have been taught is designed to keep you trapped in a cycle of dependency. They want you trading your irreplaceable time for a depreciating asset. <strong>We do not accept this reality.</strong>
+                    Look at your father. Look at your mother. They played by the rules. They traded the best years of their lives for a system that was designed to extract their energy and give them the bare minimum in return. <span class="warning-text">Is that the legacy you are going to inherit?</span>
                 </p>
                 <p class="copy-text">
-                    The shift requires absolute focus. It requires breaking the conditioning that has tethered you to mediocrity. We provide the architecture for your escape. No motivation. No theory. <span class="highlight-gold">Only execution.</span>
+                    You have been programmed to believe that working 40 hours a week for 40 years is the only path. It is a <span class="highlight-gold">manufactured lie</span>. The system wants you exhausted, dependent, and financially paralyzed.
+                </p>
+                <p class="copy-text">
+                    You are here because you feel it. The quiet desperation of a life unfulfilled. You know you were meant for more than scraping by. We are here to sever those chains.
                 </p>
             </div>
 
             <div id="tab-arsenal" class="tab-content">
                 <h2 class="section-heading">30 Classified Protocols</h2>
                 <p class="copy-text">
-                    Inside ARC, you will gain access to <span class="highlight-gold">30 distinct, battle-tested business models.</span> These are not trendy gimmicks; they are the exact mechanisms currently being deployed by the elite to extract wealth from global markets.
+                    Inside ARC, we do not teach theory. We provide <span class="highlight-gold">30 distinct, battle-tested business models.</span> 
                 </p>
                 <p class="copy-text">
-                    We do not broadcast these protocols to the public. When a strategy becomes common knowledge, its edge evaporates. <strong>Privacy is paramount.</strong>
+                    We possess <span class="highlight-silver">Instant Cash-Flow Mechanisms</span> for immediate extraction, <span class="highlight-silver">Short-Term Leverage Systems</span> to build capital, and <span class="highlight-silver">Long-Term Empire Models</span> to solidify generational wealth.
                 </p>
                 <p class="copy-text">
-                    <strong>The Meritocratic Vault:</strong> You will not receive all 30 models on day one. Access is earned. As you execute the foundational frameworks, demonstrate competence, and generate verifiable revenue, higher-tier systems will be unlocked.
+                    <strong>Why don't we reveal them here?</strong> Because the masses ruin everything. The moment a strategy becomes public knowledge, the edge is gone. Privacy is our greatest asset. 
+                </p>
+                <p class="copy-text">
+                    Furthermore, you do not get them all at once. <span class="highlight-gold">You must prove yourself.</span> As you execute the foundational models and prove you have what it takes, the higher-tier, elite systems will be unlocked for you.
                 </p>
             </div>
 
-            <div id="tab-timeline" class="tab-content">
-                <h2 class="section-heading">The Trajectory</h2>
+            <div id="tab-transformation" class="tab-content">
+                <h2 class="section-heading">The ARC Evolution</h2>
                 <p class="copy-text">
-                    We demand commitment, and we guarantee structure. The process is absolute:
+                    What we offer is not merely a course; it is a <span class="highlight-gold">complete reconstruction of your reality.</span>
                 </p>
                 <p class="copy-text">
-                    <span class="highlight-gold">Phase I (Day 0-30):</span> <strong>Mental Decoupling.</strong> Destruction of the employee virus. You will select your initial vehicle and establish your baseline operations.
+                    <strong>The Solution:</strong> We provide the exact blueprints used by the 1%. No guesswork. No trial and error. Just raw, calculated execution.
                 </p>
                 <p class="copy-text">
-                    <span class="highlight-gold">Phase II (Day 30-90):</span> <strong>Strategic Mobilization.</strong> Ruthless deployment. Your first high-yield system goes live. You test the market and secure initial cash flow.
+                    <strong>The Transformation:</strong> You will transition from a consumer, reactive to the world around you, into an <span class="highlight-silver">Operator</span>—a predator in the financial markets, dictating your own terms. You will build a moat around yourself and your family.
                 </p>
                 <p class="copy-text">
-                    <span class="highlight-gold">Phase III (Day 90+):</span> <strong>Sovereignty.</strong> The transition from operator to owner. We focus on scaling your systems, automating processes, and protecting your assets.
+                    The vision is absolute autonomy. Wealth that cannot be touched. Freedom that cannot be revoked.
                 </p>
-                
-                <div class="bottom-cta">
-                    <a href="#whop-checkout" class="btn-luxury btn-gold">Initiate Transfer</a>
-                </div>
             </div>
+        </div>
+
+        <div class="centered-btn-wrapper">
+            <a href="#join-whop" class="btn-luxury btn-gold">Join The Elite</a>
         </div>
 
     </div>
 
     <script>
-        // --- TAB LOGIC ---
+        // --- 1. TAB LOGIC ---
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
-            
-            // Hide all tab content
             tabcontent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
                 tabcontent[i].classList.remove("active");
             }
-            
-            // Remove active class from all buttons
             tablinks = document.getElementsByClassName("tab-btn");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-            
-            // Show the current tab, and add an "active" class to the button that opened the tab
             document.getElementById(tabName).style.display = "block";
-            // Allow a tiny delay for display:block to apply before adding the active class for animation
             setTimeout(() => {
                 document.getElementById(tabName).classList.add("active");
             }, 10);
             evt.currentTarget.className += " active";
         }
 
-        // --- THREE.JS 3D BACKGROUND (Rotating Gold Pyramid) ---
-        const container3D = document.getElementById('webgl-background');
-        const scene3D = new THREE.Scene();
-        // Adjust fog to blend with the brown background
-        scene3D.fog = new THREE.FogExp2(0x1a0f0a, 0.025);
-
-        const camera3D = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        // Position camera to frame the pyramid in the background
-        camera3D.position.set(0, 0, 35); 
-
-        const renderer3D = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl-canvas-logo'), antialias: true, alpha: true });
-        renderer3D.setSize(window.innerWidth, window.innerHeight);
-        renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-        // Create the Pyramid (4-sided cone)
-        const pyramidGeo = new THREE.ConeGeometry(8, 12, 4);
+        // --- 2. THREE.JS 3D BACKGROUND (Solid Gold Pyramid) ---
+        const container3D = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
         
-        // Solid Gold Material using ARC logo colors
+        // Setup Camera
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 25; 
+
+        // Setup Renderer (Alpha true so background CSS gradient shows)
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container3D.appendChild(renderer.domElement);
+
+        // CREATE THE SOLID GOLD PYRAMID
+        // 4 radial segments = square base
+        const pyramidGeo = new THREE.ConeGeometry(6, 8, 4);
+        
+        // Pure Gold Material - Solid, metallic, reflective
         const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xD4AF37,       // Base Gold
-            emissive: 0x3a2618,    // Emitting the base brown color slightly
-            roughness: 0.1,        // Shiny
-            metalness: 1.0,        // Metallic
-            flatShading: true      // Crisp edges
+            color: 0xD4AF37,       // Pure Gold
+            emissive: 0x24140c,    // Emitting the dark brown background color
+            roughness: 0.15,       // Very shiny
+            metalness: 1.0,        // Pure metal
+            flatShading: true      // Crisp, sharp edges
         });
 
-        // Add black outline to the pyramid
-        const edgesGeo = new THREE.EdgesGeometry(pyramidGeo);
-        const lineMat = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 3 });
-        const outlineMesh = new THREE.LineSegments(edgesGeo, lineMat);
+        // Add black outline to the pyramid for definition
+        const edges = new THREE.EdgesGeometry(pyramidGeo);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 3 });
+        const outline = new THREE.LineSegments(edges, lineMaterial);
 
         const pyramidGroup = new THREE.Group();
         const pyramidMesh = new THREE.Mesh(pyramidGeo, goldMaterial);
         
         pyramidGroup.add(pyramidMesh);
-        pyramidGroup.add(outlineMesh);
+        pyramidGroup.add(outline);
         
-        // Tilt the pyramid so we see its shape
-        pyramidGroup.rotation.x = 0.4;
-        pyramidGroup.rotation.y = Math.PI / 4;
-        
-        scene3D.add(pyramidGroup);
+        // Position it high up, behind the header
+        pyramidGroup.position.set(0, 5, -5); 
+        pyramidGroup.rotation.y = Math.PI / 4; 
+        scene.add(pyramidGroup);
 
-        // Lighting to make the gold pop
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene3D.add(ambientLight);
+        // LIGHTING
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); 
+        scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-        dirLight.position.set(10, 20, 10);
-        scene3D.add(dirLight);
+        // Key light (Bright white/gold)
+        const keyLight = new THREE.DirectionalLight(0xfff5e6, 2.0);
+        keyLight.position.set(10, 20, 10);
+        scene.add(keyLight);
 
-        // --- MOUSE TRACKING (For Pyramid and Text) ---
+        // Fill light (Matches the background dark green/brown)
+        const fillLight = new THREE.DirectionalLight(0x112920, 3.0);
+        fillLight.position.set(-10, -10, 10);
+        scene.add(fillLight);
+
+        // --- 3. MOUSE TRACKING FOR 3D OBJECT AND HTML TEXT ---
         let mouseX = 0;
         let mouseY = 0;
         let targetX = 0;
@@ -459,6 +461,7 @@
         let windowHalfY = window.innerHeight / 2;
 
         document.addEventListener('mousemove', (event) => {
+            // Normalized values between -1 and 1
             mouseX = (event.clientX - windowHalfX) / windowHalfX;
             mouseY = (event.clientY - windowHalfY) / windowHalfY;
         });
@@ -470,42 +473,38 @@
             }
         });
 
+        const headerElement = document.getElementById('interactive-header');
+
         document.addEventListener('mouseleave', () => {
             mouseX = 0;
             mouseY = 0;
+            headerElement.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(0px)`;
         });
 
-        const titleText = document.getElementById('title-text');
-        const subtitleText = document.getElementById('subtitle-text');
-
-        // Animation Loop
+        // --- 4. ANIMATION LOOP ---
         const clock = new THREE.Clock();
 
         function animate() {
             requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
 
-            // Smooth interpolation for mouse movements
+            // Smooth interpolation
             targetX += (mouseX - targetX) * 0.05;
             targetY += (mouseY - targetY) * 0.05;
 
-            // 1. Animate Pyramid (Rotates based on time + mouse)
-            pyramidGroup.rotation.y = (time * 0.2) + (targetX * 0.8);
-            pyramidGroup.rotation.x = 0.4 + (targetY * 0.5);
-            // Slight floating motion
-            pyramidGroup.position.y = Math.sin(time) * 0.5;
+            // Animate 3D Pyramid
+            pyramidGroup.rotation.y = (time * 0.3) + (targetX * 1.5); // Spin + Mouse
+            pyramidGroup.rotation.x = 0.2 + (targetY * 0.5); // Tilt + Mouse
+            pyramidGroup.position.x = targetX * 3; // Shift slightly L/R
+            pyramidGroup.position.y = 5 + (targetY * 2); // Shift U/D
+            pyramidGroup.position.z = -5 + Math.sin(time * 2) * 0.5; // Slight breathing
 
-            // 2. Animate HTML Text (CSS 3D Tilt)
-            // Limit the tilt angle so it remains readable
-            const maxTilt = 15; 
-            const rotX = -targetY * maxTilt; 
-            const rotY = targetX * maxTilt;
-            
-            // Apply different Z-depths to title and subtitle for a parallax effect
-            titleText.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(80px)`;
-            subtitleText.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(40px)`;
+            // Animate HTML Text (CSS 3D Tilt) - ONLY the title rotates
+            const rotX = -targetY * 15; // Max 15 degrees
+            const rotY = targetX * 15;
+            headerElement.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
 
-            renderer3D.render(scene3D, camera3D);
+            renderer.render(scene, camera);
         }
 
         animate();
@@ -514,9 +513,9 @@
         window.addEventListener('resize', () => {
             windowHalfX = window.innerWidth / 2;
             windowHalfY = window.innerHeight / 2;
-            camera3D.aspect = window.innerWidth / window.innerHeight;
-            camera3D.updateProjectionMatrix();
-            renderer3D.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
     </script>
